@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34525.116
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HealthPassport", "HealthPassport\HealthPassport.csproj", "{3ED0DE90-9003-4C88-A1A9-62056C6B2E08}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2A489C84-486E-4410-B13E-951DFBC96BD9} = {2A489C84-486E-4410-B13E-951DFBC96BD9}
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HealthPassport.DAL", "HealthPassport.DAL\HealthPassport.DAL.csproj", "{2A489C84-486E-4410-B13E-951DFBC96BD9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HealthPassport.BLL", "HealthPassport.BLL\HealthPassport.BLL.csproj", "{32309ECA-6AB2-41F0-8CE5-9278B58DEA7B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2A489C84-486E-4410-B13E-951DFBC96BD9} = {2A489C84-486E-4410-B13E-951DFBC96BD9}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3ED0DE90-9003-4C88-A1A9-62056C6B2E08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3ED0DE90-9003-4C88-A1A9-62056C6B2E08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3ED0DE90-9003-4C88-A1A9-62056C6B2E08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3ED0DE90-9003-4C88-A1A9-62056C6B2E08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A489C84-486E-4410-B13E-951DFBC96BD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A489C84-486E-4410-B13E-951DFBC96BD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A489C84-486E-4410-B13E-951DFBC96BD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A489C84-486E-4410-B13E-951DFBC96BD9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32309ECA-6AB2-41F0-8CE5-9278B58DEA7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32309ECA-6AB2-41F0-8CE5-9278B58DEA7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32309ECA-6AB2-41F0-8CE5-9278B58DEA7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32309ECA-6AB2-41F0-8CE5-9278B58DEA7B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4537E192-457C-4FCE-BC47-147E3C2DD2C0}
+	EndGlobalSection
+EndGlobal

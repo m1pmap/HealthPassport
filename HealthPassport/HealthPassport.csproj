@@ -1,0 +1,107 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\images\add.png" />
+    <None Remove="Resources\images\addCalc.png" />
+    <None Remove="Resources\images\addDependency.png" />
+    <None Remove="Resources\images\arrow_left.png" />
+    <None Remove="Resources\images\calc.png" />
+    <None Remove="Resources\images\calcToExcel.png" />
+    <None Remove="Resources\images\calcToNewSheetExcel.png" />
+    <None Remove="Resources\images\chapter.png" />
+    <None Remove="Resources\images\CheckDidderencies_false.png" />
+    <None Remove="Resources\images\CheckDidderencies_true.png" />
+    <None Remove="Resources\images\copyCalc.png" />
+    <None Remove="Resources\images\deleteDependency.png" />
+    <None Remove="Resources\images\delete_image.png" />
+    <None Remove="Resources\images\delete_manufacturer.png" />
+    <None Remove="Resources\images\dependency.png" />
+    <None Remove="Resources\images\dependency_1.png" />
+    <None Remove="Resources\images\download_to_clipboard.png" />
+    <None Remove="Resources\images\download_to_file.png" />
+    <None Remove="Resources\images\exit.png" />
+    <None Remove="Resources\images\exit_cross.png" />
+    <None Remove="Resources\images\exportAllCalcToPrice.png" />
+    <None Remove="Resources\images\exportCalcToPrice.png" />
+    <None Remove="Resources\images\fast_search.png" />
+    <None Remove="Resources\images\ico.ico" />
+    <None Remove="Resources\images\moveDown.png" />
+    <None Remove="Resources\images\moveUp.png" />
+    <None Remove="Resources\images\newCalc.png" />
+    <None Remove="Resources\images\openCalc.png" />
+    <None Remove="Resources\images\pasteCalc.png" />
+    <None Remove="Resources\images\play.png" />
+    <None Remove="Resources\images\refresh.png" />
+    <None Remove="Resources\images\save.png" />
+    <None Remove="Resources\images\search.png" />
+    <None Remove="Resources\images\sort.png" />
+    <None Remove="Resources\images\stop.png" />
+    <None Remove="Resources\images\upload_from_clipboard.png" />
+    <None Remove="Resources\images\upload_from_file.png" />
+    <None Remove="Resources\images\withoutDependency.png" />
+    <None Remove="Resources\images\without_image_database.png" />
+    <None Remove="Resources\images\without_picture.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HealthPassport.BLL\HealthPassport.BLL.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\images\add.png" />
+    <Resource Include="Resources\images\addCalc.png" />
+    <Resource Include="Resources\images\addDependency.png" />
+    <Resource Include="Resources\images\calcToExcel.png" />
+    <Resource Include="Resources\images\calcToNewSheetExcel.png" />
+    <Resource Include="Resources\images\chapter.png" />
+    <Resource Include="Resources\images\CheckDidderencies_false.png" />
+    <Resource Include="Resources\images\CheckDidderencies_true.png" />
+    <Resource Include="Resources\images\copyCalc.png" />
+    <Resource Include="Resources\images\deleteDependency.png" />
+    <Resource Include="Resources\images\delete_image.png" />
+    <Resource Include="Resources\images\delete_manufacturer.png" />
+    <Resource Include="Resources\images\download_to_clipboard.png" />
+    <Resource Include="Resources\images\download_to_file.png" />
+    <Resource Include="Resources\images\exit.png" />
+    <Resource Include="Resources\images\exit_cross.png" />
+    <Resource Include="Resources\images\exportAllCalcToPrice.png" />
+    <Resource Include="Resources\images\exportCalcToPrice.png" />
+    <Resource Include="Resources\images\fast_search.png" />
+    <Resource Include="Resources\images\moveDown.png" />
+    <Resource Include="Resources\images\moveUp.png" />
+    <Resource Include="Resources\images\newCalc.png" />
+    <Resource Include="Resources\images\openCalc.png" />
+    <Resource Include="Resources\images\pasteCalc.png" />
+    <Resource Include="Resources\images\refresh.png" />
+    <Resource Include="Resources\images\save.png" />
+    <Resource Include="Resources\images\search.png" />
+    <Resource Include="Resources\images\sort.png" />
+    <Resource Include="Resources\images\upload_from_clipboard.png" />
+    <Resource Include="Resources\images\upload_from_file.png" />
+    <Resource Include="Resources\images\without_image_database.png" />
+    <Resource Include="Resources\images\without_picture.png" />
+  </ItemGroup>
+
+</Project>

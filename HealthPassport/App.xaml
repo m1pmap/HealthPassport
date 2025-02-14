@@ -1,0 +1,9 @@
+﻿<Application x:Class="HealthPassport.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:HealthPassport.Services">
+    <Application.Resources>
+        <local:ByteArrayToImageSourceConverter_Service x:Key="ByteArrayToImageSourceConverter"/>
+        <!--<local:NullToEmptyStringConverter x:Key="NullToEmptyStringConverter" />-->
+    </Application.Resources>
+</Application>
