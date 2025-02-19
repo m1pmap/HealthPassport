@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using HealthPassport.DAL.Repositories;
 using HealthPassport.DAL.Interfaces;
 using HealthPassport.DAL.Models;
-using Autofac;
 
 namespace HealthPassport.BLL.Services
 {

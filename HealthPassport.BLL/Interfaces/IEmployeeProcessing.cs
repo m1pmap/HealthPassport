@@ -16,5 +16,6 @@ namespace HealthPassport.BLL.Interfaces
         bool Delete_Employee(int id);
         bool Update_employee(Employee employee);
         Employee CheckEmployeeInDb(string mail);
+        Employee Connect_EmployeeInformation(Employee employee);
     }
 }

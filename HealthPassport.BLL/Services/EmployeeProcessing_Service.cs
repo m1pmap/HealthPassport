@@ -42,5 +42,10 @@ namespace HealthPassport.BLL.Services
             return _employeeRepository.Update_Employee(employee);
         }
 
+        public Employee Connect_EmployeeInformation(Employee employee)
+        {
+            return _employeeRepository.Connect_EmployeeInformation(employee);
+        }
+
     }
 }

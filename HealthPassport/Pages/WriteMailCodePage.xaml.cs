@@ -1,5 +1,4 @@
-﻿using Autofac;
-using HealthPassport;
+﻿using HealthPassport;
 using HealthPassport.BLL.Interfaces;
 using HealthPassport.BLL.Models;
 using HealthPassport.BLL.Services;

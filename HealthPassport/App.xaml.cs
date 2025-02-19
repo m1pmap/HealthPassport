@@ -12,6 +12,8 @@ using HealthPassport.Services;
 using HealthPassport.DAL;
 using HealthPassport.Interfaces;
 using Dahmira.Services;
+using Microsoft.EntityFrameworkCore;
+using HealthPassport.Models;
 
 namespace HealthPassport
 {
@@ -25,6 +27,7 @@ namespace HealthPassport
             ServiceProvider = ConfigureServices();
             Resources["ByteArrayToImageSourceConverter"] = ServiceProvider.GetService<ByteArrayToImageSourceConverter_Service>();
             Resources["NullToEmptyStringConverter"] = ServiceProvider.GetService<NullToEmptyStringConverter>();
+            ServiceLocator.Provider = ServiceProvider;
 
             // 🔹 Запускаем LoginPage
             var loginPage = ServiceProvider.GetRequiredService<LoginPage>();
@@ -44,10 +47,23 @@ namespace HealthPassport
             //Регистрация BLL сервисов
             services.AddScoped<IMailSender, MailSender_Service>();
             services.AddScoped<IEmployeeProcessing, EmployeeProcessing_Service>();
+            services.AddScoped<IDiseaseProcessing, DiseaseProcessing_Service>();
+            services.AddScoped<IVaccinationProcessing, VaccinationProcessing_Service>();
+            services.AddScoped<IJobProcessing, JobProcessing_Service>();
+            services.AddScoped<IFamilyStatusProcessing, FamilyStatusProcessing_Service>();
+            services.AddScoped<IAntropologicalResearchProcessing, AntropologicalResearchProcessing_Service>();
+            services.AddScoped<IEducationProcessing, EducationProcessing_Service>();
             services.AddScoped<IJsonSerializer, JsonSerializer_Service>();
 
             //Регистрация DAL репозиториев
             services.AddScoped<IEmployee, Employee_Repository>();
+            services.AddScoped<IDisease, Disease_Repository>();
+            services.AddScoped<IVaccination, Vaccination_Repository>();
+            services.AddScoped<IJob, Job_Repository>();
+            services.AddScoped<IJobType, JobType_Repository>();
+            services.AddScoped<IFamilyStatus, FamilyStatus_Repository>();
+            services.AddScoped<IAntropologicalResearch, AntropologicalResearch_Repository>();
+            services.AddScoped<IEducation, Education_Repository>();
 
             //Регистрация контекста БД
             services.AddDbContext<ApplicationDbContext>();
@@ -57,6 +73,7 @@ namespace HealthPassport
             services.AddTransient<LoginPage>();
             services.AddTransient<WriteMailCodePage>();
             services.AddTransient<MoreEmployeeInfoPage>();
+
 
             return services.BuildServiceProvider();
         }

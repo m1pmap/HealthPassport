@@ -1,5 +1,6 @@
 ﻿using HealthPassport.DAL.Interfaces;
 using HealthPassport.DAL.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -67,10 +68,7 @@ namespace HealthPassport.DAL.Repositories
                 if (updateEmployee != null)
                 {
                     updateEmployee.FIO = newEmployee.FIO;
-                    updateEmployee.Job = newEmployee.Job;
-                    updateEmployee.Education = newEmployee.Education;
                     updateEmployee.Birthday = newEmployee.Birthday;
-                    updateEmployee.FamilyStatus = newEmployee.FamilyStatus;
                     updateEmployee.Photo = newEmployee.Photo;
                     _db.SaveChanges();
                 }
@@ -80,6 +78,30 @@ namespace HealthPassport.DAL.Repositories
             {
 
                 return false; 
+            }
+        }
+
+        public Employee Connect_EmployeeInformation(Employee employee)
+        {
+            try
+            {
+                Employee connectedEmployee = new Employee();
+
+                connectedEmployee = _db.Employees
+                            .Include(e => e.Diseases)
+                            .Include(e => e.Vaccinations)
+                            .Include(e => e.FamilyStatuses)
+                            .Include(e => e.Educations)
+                            .Include(e => e.AntropologicalResearches)
+                            .Include(e => e.Jobs)
+                                .ThenInclude(j => j.JobType)
+                            .FirstOrDefault(u => u.EmployeeId == employee.EmployeeId);
+
+                return connectedEmployee;
+            }
+            catch
+            {
+                return employee;
             }
         }
     }

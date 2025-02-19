@@ -1,5 +1,4 @@
-﻿using Autofac;
-using Dahmira.Pages;
+﻿using Dahmira.Pages;
 using HealthPassport.BLL.Interfaces;
 using HealthPassport.BLL.Models;
 using HealthPassport.DAL.Models;
@@ -25,6 +24,8 @@ namespace HealthPassport.Pages
         private readonly IFileWorker _fileWorker;
         private readonly IMailSender _mailSender;
         private readonly IShaderEffects _shaderEffectsService;
+        private readonly IJobProcessing _jobProcessingService;
+
 
         bool isFormClosingNow = false;
 
@@ -33,7 +34,8 @@ namespace HealthPassport.Pages
             IServiceProvider serviceProvider,
             IEmployeeProcessing employeeProcessingService,
             IFileWorker fileWorker,
-            IShaderEffects shaderEffectsService)
+            IShaderEffects shaderEffectsService,
+            IJobProcessing jobProcessingService)
         {
             InitializeComponent();
 
@@ -44,8 +46,13 @@ namespace HealthPassport.Pages
             _imageSourceConverter = imageSourceConverter;
             _fileWorker = fileWorker;
             _shaderEffectsService = shaderEffectsService;
+            _jobProcessingService = jobProcessingService;
 
             //Функционал
+
+            List<JobType> jobTypes = _jobProcessingService.GetAllJobTypes();
+            Job_comboBox.ItemsSource = jobTypes;
+
             if (File.Exists("settings.json"))
             {
                 //MessageBox.Show("!");
@@ -76,7 +83,7 @@ namespace HealthPassport.Pages
                     if (string.IsNullOrWhiteSpace(Name_textBox.Text) ||
                         string.IsNullOrWhiteSpace(Surname_textBox.Text) ||
                         string.IsNullOrWhiteSpace(SecondName_textBox.Text) ||
-                        string.IsNullOrWhiteSpace(Job_textBox.Text))
+                        string.IsNullOrWhiteSpace(Job_comboBox.Text))
                     {
                         MessageBox.Show("Пользователь заполнил не все поля.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
@@ -106,7 +113,6 @@ namespace HealthPassport.Pages
                                     Employee registerEmployee = new Employee
                                     {
                                         FIO = $"{Surname_textBox.Text} {Name_textBox.Text} {SecondName_textBox.Text}",
-                                        Job = Job_textBox.Text,
                                         Birthday = (DateTime)Birthday_datePicker.SelectedDate,
                                         MailAdress = SignUpMail_textBox.Text,
                                         Photo = _imageSourceConverter.ConvertFromFileImageToByteArray("without_image_database.png")

@@ -14,5 +14,6 @@ namespace HealthPassport.DAL.Interfaces
         List<Employee> Get_AllEmployees();
         bool Delete_Employee(int id);
         bool Update_Employee(Employee employee);
+        Employee Connect_EmployeeInformation(Employee employee);
     }
 }

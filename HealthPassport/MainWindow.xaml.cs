@@ -1,5 +1,4 @@
-﻿using Autofac;
-using HealthPassport.BLL.Interfaces;
+﻿using HealthPassport.BLL.Interfaces;
 using HealthPassport.BLL.Models;
 using HealthPassport.DAL.Models;
 using HealthPassport.Interfaces;
@@ -49,6 +48,7 @@ namespace HealthPassport
         int oldCurrentProductIndex = 1; //Прошлый выбранный элемент в базе данных
 
 
+
         public MainWindow(ByteArrayToImageSourceConverter_Service imageSourceConverter, 
             IEmployeeProcessing employeeProcessingService,
             IImageUpdater imageUpdater,
@@ -68,7 +68,8 @@ namespace HealthPassport
             List<Employee> dbEmployees = _employeeProcessingService.Get_AllEmployees();
             foreach (Employee employee in dbEmployees)
             {
-                employees.Add((Employee_ViewModel)employee);
+                Employee_ViewModel emploeyeVM = (Employee_ViewModel)_employeeProcessingService.Connect_EmployeeInformation(employee);
+                employees.Add(emploeyeVM);
             }
 
             employees_dataGrid.ItemsSource = employees;
@@ -100,14 +101,19 @@ namespace HealthPassport
             if(!string.IsNullOrWhiteSpace(NewFIO_textBox.Text) ||
                !string.IsNullOrWhiteSpace(NewJob_textBox.Text) ||
                !string.IsNullOrWhiteSpace(NewMail_textBox.Text) ||
-               !string.IsNullOrWhiteSpace(((DateTime)NewBirthday_datePicker.SelectedDate).ToString("dd.MM.yyyy"))) 
+               !string.IsNullOrWhiteSpace(NewDayBirth_textBox.Text) ||
+               !string.IsNullOrWhiteSpace(NewMonthBirth_textBox.Text) ||
+               !string.IsNullOrWhiteSpace(NewYearBirth_textBox.Text)) 
             {
+                int year = Convert.ToInt32(NewYearBirth_textBox.Text);
+                int month = Convert.ToInt32(NewMonthBirth_textBox.Text);
+                int day = Convert.ToInt32(NewDayBirth_textBox.Text);
+
                 Employee newEmployee = new Employee
                 {
                     FIO = NewFIO_textBox.Text,
-                    Job = NewJob_textBox.Text,
                     MailAdress = NewMail_textBox.Text,
-                    Birthday = (DateTime)NewBirthday_datePicker.SelectedDate,
+                    Birthday = new DateTime(year, month, day),
                 };
 
                 if (addedEmployeeImage.Source.ToString() != "pack://application:,,,/Resources/images/without_picture.png")

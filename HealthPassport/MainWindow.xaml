@@ -40,7 +40,7 @@
                                  Background="White"
                                  BorderBrush="Gray"
                                  BorderThickness="2"
-                                 CornerRadius="5">
+                                 CornerRadius="4">
                             <ScrollViewer x:Name="PART_ContentHost"/>
                         </Border>
                         <ControlTemplate.Triggers>
@@ -125,12 +125,11 @@
     <Grid Background="Gray">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="173.04"/>
-            <RowDefinition Height="63.96"/>
+            <RowDefinition Height="219"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        
+
         <!--Контур с меню-->
         <Border BorderBrush="Black" CornerRadius="15,15,15,15" Background="White" Margin="5,10,5,5">
             <Grid>
@@ -176,7 +175,7 @@
             Grid.Row="1"
             Background ="White" 
             CornerRadius="15,15,15,15" 
-            Margin="5,5,5,5" RenderTransformOrigin="0.501,0.554" Padding="0,0,0,0" Grid.RowSpan="2">
+            Margin="5,5,5,5" RenderTransformOrigin="0.501,0.554" Padding="0,0,0,0">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
@@ -189,7 +188,7 @@
                 <!--Кнопка перехода на расчёт и обратно на прайс-->
                 <Button x:Name="employersCalc_button" 
                         Template="{StaticResource btTemplate}"
-                        Margin="10,5"
+                        Margin="5,5,10,5"
                         Content="СОТРУДНИКИ->РАСЧЁТ"
                         Background="#F8C4D5" FontFamily="Arial Black" FontWeight="Bold" Foreground="White" FontSize="14"/>
 
@@ -198,8 +197,8 @@
                 <!--Сетка с функционалом добавления-->
                 <Grid x:Name="addGrid" Visibility="Hidden" Grid.Row="1" HorizontalAlignment="Left" Width="1905">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="142"/>
-                        <RowDefinition Height="42.987"/>
+                        <RowDefinition Height="124"/>
+                        <RowDefinition Height="60.987"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="64"/>
@@ -208,41 +207,40 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
 
-                    <StackPanel Orientation="Vertical" Grid.Column="1" Grid.Row="0" >
-                        <Label Content="РЕГИСТРАЦИЯ СОТРУДНИКА:" Foreground="Gray" Margin="10,0,0,-4" FontSize="17"/>
-                        
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
-                            <Label Content="ФИО:" Foreground="Gray" Margin="126,0,0,0"/>
-                            <TextBox x:Name="NewFIO_textBox" Width="514" Margin="0,4,0,4"/>
+                    <StackPanel Orientation="Vertical" Grid.Column="1" Grid.Row="0" Margin="10,5,5,0">
+                        <Label Content="Регистрация сотрудника:" HorizontalAlignment="Center" Foreground="Gray" Margin="0,0,0,-5" FontSize="15"/>
+
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Полное имя и фамилия" Foreground="Gray" Margin="0,0,0,0" FontFamily="Arial" FontSize="12"/>
+                            <Label Content="Дата рождения" Foreground="Gray" Margin="363,0,0,0" FontFamily="Arial" FontSize="12"/>
                         </StackPanel>
 
-                        <StackPanel Orientation="Horizontal" Margin="0,-5,0,0">
-                            <Label Content="ПОЧТА:" Foreground="Gray" Margin="106,0,0,0"/>
-                            <TextBox x:Name="NewMail_textBox" Width="515" Margin="0,4,0,4"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,-3,0,0">
+                            <TextBox x:Name="NewFIO_textBox" Width="494" HorizontalAlignment="Left" Height="22" FontFamily="Arial" FontSize="15"/>
+                            <TextBox x:Name="NewDayBirth_textBox" Margin="10,0,0,0" Width="38" Height="22" FontFamily="Arial" FontSize="15" TextAlignment="Center" MaxLength="2"/>
+                            <Label Content="." Foreground="Gray" Margin="-3,0,0,-5" Height="22"/>
+                            <TextBox x:Name="NewMonthBirth_textBox" Margin="-3,0,0,0" Width="39" Height="22" FontFamily="Arial" FontSize="15" TextAlignment="Center" MaxLength="2"/>
+                            <Label Content="." Foreground="Gray" Margin="-3,0,0,-5" Height="22"/>
+                            <TextBox x:Name="NewYearBirth_textBox" Margin="-3,0,0,0" Width="83" Height="22" FontFamily="Arial" FontSize="15" TextAlignment="Center" MaxLength="4"/>
+
                         </StackPanel>
 
-                        <StackPanel Orientation="Horizontal" Margin="0,-5,0,0">
-                            <Label Content="ДОЛЖНОСТЬ:" Foreground="Gray" Margin="57,0,0,0"/>
-                            <TextBox x:Name="NewJob_textBox" Width="514" Margin="0,4,0,4"/>
+
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Должность" Foreground="Gray" Margin="0,0,0,0" FontSize="12" FontFamily="Arial"/>
+                            <Label Content="Почта" Foreground="Gray" Margin="222,0,0,0" FontFamily="Arial" FontSize="12"/>
                         </StackPanel>
 
-                        <StackPanel Orientation="Horizontal" Margin="0,-5,0,0">
-                            <Label Content="ДАТА РОЖДЕНИЯ:" Foreground="Gray" Margin="20,0,0,0" Height="27.5"/>
-                            <Border BorderBrush="Gray" BorderThickness="1.7" CornerRadius="4" Height="19.5">
-                                <DatePicker x:Name="NewBirthday_datePicker" SelectedDate="2005-08-05" SelectedDateFormat="Short" Foreground="Gray" Width="511" FontSize="14" Height="19.5" Padding="2,0,0,0" BorderThickness="0"></DatePicker>
-                            </Border>
+                        <StackPanel Orientation="Horizontal" Margin="0,-3,0,0">
+                            <TextBox x:Name="NewJob_textBox" Width="282" HorizontalAlignment="Left" Height="22" FontFamily="Arial" FontSize="15"/>
+                            <TextBox x:Name="NewMail_textBox" Margin="10,0,0,0" Width="389" Height="22" FontFamily="Arial" FontSize="15"/>
                         </StackPanel>
-
-                        <!--<StackPanel Orientation="Horizontal" Margin="0,-5,0,0">
-                            <Label Content="СЕМЕЙНОЕ ПОЛОЖЕНИЕ:" Foreground="Gray"/>
-                            <TextBox x:Name="NewFamilyStatus_textBox" Width="477" Margin="0,4,0,4"/>
-                        </StackPanel>-->
 
                     </StackPanel>
 
 
                     <Image x:Name="addedEmployeeImage" 
-                            Margin="10,26,9,1" Source="/Resources/images/without_picture.png" Grid.Column="2"/>
+                            Margin="10,26,9,10" Source="/Resources/images/without_picture.png" Grid.Column="2"/>
 
                     <Button x:Name="uploadFromFileNewImage_button"
                             Template="{StaticResource btTemplate}" 
@@ -279,63 +277,62 @@
                     <Button x:Name="addEmployee_button" 
                             Content="ДОБАВИТЬ СОТРУДНИКА" 
                             Grid.Row="1" 
+                            Height="40"
                             Width="Auto"
                             Template="{StaticResource btTemplate}" FontFamily="Arial Black"
-                            Background="MediumSeaGreen" Foreground="White" FontSize="14" Margin="6,5,5,5" Grid.ColumnSpan="2"
+                            Background="MediumSeaGreen" Foreground="White" FontSize="14" Margin="6,0,5,20" Grid.ColumnSpan="2"
                             Click="addEmployee_button_Click"/>
                 </Grid>
 
                 <!--Сетка с функционалом поиска и добавления в расчётку-->
                 <Grid x:Name="searchGrid" Visibility="Visible" HorizontalAlignment="Left" Grid.Row="1" Width="1905">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="142"/>
-                        <RowDefinition Height="42.987"/>
+                        <RowDefinition Height="124"/>
+                        <RowDefinition Height="60.987"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="64"/>
                         <ColumnDefinition Width="697"/>
                         <ColumnDefinition Width="169"/>
-                        <ColumnDefinition Width="1056"/>
+                        <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Vertical" Grid.Column="1" Margin="10,5,5,5">
+                        <Label Content="Информация о сотруднике:" HorizontalAlignment="Center" Foreground="Gray" Margin="0,0,0,-5" FontSize="15" FontFamily="Arial Black"/>
 
-                    <StackPanel Orientation="Vertical" Grid.Column="1" >
-                        <Label Content="ИНФОРМАЦИЯ О СОТРУДНИКЕ:" Foreground="Gray" Margin="10,0,0,-4" FontSize="17"/>
-                        <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
-                            <Label Content="ФИО:" Foreground="Gray" Margin="163,0,0,0"/>
-                            <TextBox x:Name="FIO_textBox" Width="477" Margin="0,4,0,4"/>
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Полное имя и фамилия" Foreground="Gray" Margin="0,0,0,0" FontFamily="Arial" FontSize="12"/>
+                            <Label Content="Образование" Foreground="Gray" Margin="363,0,0,0" FontFamily="Arial" FontSize="12"/>
                         </StackPanel>
 
-                        <StackPanel Orientation="Horizontal" Margin="0,-5,0,0">
-                            <Label Content="ДОЛЖНОСТЬ:" Foreground="Gray" Margin="94,0,0,0"/>
-                            <TextBox x:Name="Job_textBox" Width="477" Margin="0,4,0,4"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,-3,0,0">
+                            <TextBox x:Name="FIO_textBox" Width="494" HorizontalAlignment="Left" Height="22" FontFamily="Arial" FontSize="15"/>
+                            <TextBox x:Name="Education_textBox" Margin="10,0,0,0" Width="178" Height="22" FontFamily="Arial" FontSize="15"/>
+
                         </StackPanel>
 
-                        <StackPanel Orientation="Horizontal" Margin="0,-5,0,0">
-                            <Label Content="ОБРАЗОВАНИЕ:" Foreground="Gray" Margin="79,0,0,0"/>
-                            <TextBox x:Name="Education_textBox" Width="477" Margin="0,4,0,4"/>
+
+                        <StackPanel Orientation="Horizontal">
+                            <Label Content="Должность" Foreground="Gray" Margin="0,0,0,0" FontSize="12" FontFamily="Arial"/>
+                            <Label Content="Дата рождения" Foreground="Gray" Margin="222,0,0,0" FontFamily="Arial" FontSize="12"/>
+                            <Label Content="Семейное положение" Foreground="Gray" Margin="117,0,0,0" FontFamily="Arial" FontSize="12"/>
                         </StackPanel>
 
-                        <StackPanel Orientation="Horizontal" Margin="0,-5,0,0">
-                            <Label Content="ДАТА РОЖДЕНИЯ:" Foreground="Gray" Margin="58,0,0,0"/>
-                            <TextBox x:Name="Birthday_textBox" Width="477" Margin="0,4,0,4"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,-3,0,0">
+                            <TextBox x:Name="Job_textBox" Width="282" HorizontalAlignment="Left" Height="22" FontFamily="Arial" FontSize="15"/>
+                            <TextBox x:Name="Birthday_textBox" Margin="10,0,0,0" Width="202" Height="22" FontFamily="Arial" FontSize="15"/>
+                            <TextBox x:Name="FamilyStatus_textBox" Margin="10,0,0,0" Width="178" Height="22" FontFamily="Arial" FontSize="15"/>
                         </StackPanel>
-
-                        <StackPanel Orientation="Horizontal" Margin="0,-5,0,0">
-                            <Label Content="СЕМЕЙНОЕ ПОЛОЖЕНИЕ:" Foreground="Gray"/>
-                            <TextBox x:Name="FamilyStatus_textBox" Width="477" Margin="0,4,0,4"/>
-                        </StackPanel>
-
                     </StackPanel>
 
                     <Button x:Name="EmployeeMoreInfo" 
                             Content="БОЛЬШЕ ИНФОРМАЦИИ О СОТРУДНИКЕ" 
                             Grid.Row="1" 
                             Width="Auto"
-                            Height="Auto"
+                            Height="40"
                             Template="{StaticResource btTemplate}" FontFamily="Arial Black" 
-                            Background="Coral" Foreground="White" FontSize="14"  Margin="6,5,5,5" Grid.ColumnSpan="2"/>
+                            Background="Coral" Foreground="White" FontSize="14"  Margin="6,0,5,20" Grid.ColumnSpan="2"/>
 
-                    <Image x:Name="EmployeeImage" Margin="10,26,9,1" Source="/Resources/images/without_picture.png" Grid.Column="2"/>
+                    <Image x:Name="EmployeeImage" Margin="10,26,9,10" Source="/Resources/images/without_picture.png" Grid.Column="2"/>
 
 
                 </Grid>
@@ -383,7 +380,7 @@
         </Border>
 
         <!--Контур с БД-->
-        <Border Grid.Row="3"
+        <Border Grid.Row="2"
                 Background ="White" 
                 CornerRadius="15,15,15,15" 
                 Margin="5,5,5,5" RenderTransformOrigin="0.501,0.554">
@@ -440,8 +437,8 @@
                     </StackPanel>
 
                     <DataGrid x:Name="employees_dataGrid" Grid.Row="1" AutoGenerateColumns="False" Margin="5,0,5,10" Background="Transparent"
-                              MinRowHeight="20" FontSize="12"
-                              CanUserAddRows="False" FontFamily="Arial" Foreground="Black" 
+                              MinRowHeight="20" FontSize="14"
+                              CanUserAddRows="False" FontFamily="Arial" Foreground="Gray" 
                               RowHeaderWidth="0" SelectedIndex="0"
                               SelectedCellsChanged="employees_dataGrid_SelectedCellsChanged" IsReadOnly="True"
                               MouseDoubleClick="employees_dataGrid_MouseDoubleClick">
@@ -515,9 +512,9 @@
 
                 </Grid>
             </Grid>
-            
+
         </Border>
 
-        
-        </Grid>
+
+    </Grid>
 </Window>

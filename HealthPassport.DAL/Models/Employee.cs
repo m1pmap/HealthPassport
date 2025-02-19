@@ -12,15 +12,16 @@ namespace HealthPassport.DAL.Models
         public int EmployeeId { get; set; }
         [MaxLength(200)]
         public string FIO { get; set; } = string.Empty;
-        [MaxLength(150)]
-        public string Job { get; set; } = string.Empty;
-        [MaxLength(120)]
-        public string Education { get; set; } = string.Empty;
         public DateTime Birthday { get; set; }
-        [MaxLength(50)]
-        public string FamilyStatus { get; set; } = string.Empty;
         [MaxLength(50)]
         public string MailAdress {  get; set; } = string.Empty;
         public byte[] Photo { get; set; } = null;
+
+        public virtual ICollection<Disease> Diseases { get; set; } = new List<Disease>();
+        public virtual ICollection<Vaccination> Vaccinations { get; set; } = new List<Vaccination>();
+        public virtual ICollection<Job> Jobs { get; set; } = new List<Job>();
+        public virtual ICollection<FamilyStatus> FamilyStatuses { get; set; } = new List<FamilyStatus>();
+        public virtual ICollection<AntropologicalResearch> AntropologicalResearches { get; set; } = new List<AntropologicalResearch>();
+        public virtual ICollection<Education> Educations { get; set; } = new List<Education>();
     }
 }

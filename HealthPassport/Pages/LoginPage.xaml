@@ -141,7 +141,10 @@
                         <TextBox x:Name="SecondName_textBox" Foreground="Gray" Width="315"/>
 
                         <Label Content="Должность:" Foreground="Gray" FontSize="20" HorizontalAlignment="Center"/>
-                        <TextBox x:Name="Job_textBox" Foreground="Gray" Width="315"/>
+                        <Border CornerRadius="10" BorderThickness="1.7" BorderBrush="Gray" Margin="3,0">
+                            <ComboBox x:Name="Job_comboBox" IsEditable="True" Margin="5,3" BorderThickness="0" Foreground="Gray" FontSize="17" DisplayMemberPath="JobName"/>
+                        </Border>
+                        <!--<TextBox x:Name="Job_textBox" Foreground="Gray" Width="315"/>-->
 
                         <Label Content="Дата рождения:" Foreground="Gray" FontSize="20" HorizontalAlignment="Center"/>
                         <Border BorderBrush="Gray" BorderThickness="1.7" CornerRadius="10" Height="35.55">
