@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HealthPassport.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250218134035_createAntropologicalResearchesTable")]
-    partial class createAntropologicalResearchesTable
+    [Migration("20250220134741_RefactorEducationTable")]
+    partial class RefactorEducationTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -81,6 +81,54 @@ namespace HealthPassport.DAL.Migrations
                     b.ToTable("Diseases");
                 });
 
+            modelBuilder.Entity("HealthPassport.DAL.Models.Education", b =>
+                {
+                    b.Property<int>("EducationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EducationId"));
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EducationInstitution")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("EducationLevelId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("EmployeeId")
+                        .HasColumnType("int");
+
+                    b.HasKey("EducationId");
+
+                    b.HasIndex("EducationLevelId");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.ToTable("Educations");
+                });
+
+            modelBuilder.Entity("HealthPassport.DAL.Models.EducationLevel", b =>
+                {
+                    b.Property<int>("EducationLevelId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EducationLevelId"));
+
+                    b.Property<string>("EducationLevelName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("EducationLevelId");
+
+                    b.ToTable("EducationLevels");
+                });
+
             modelBuilder.Entity("HealthPassport.DAL.Models.Employee", b =>
                 {
                     b.Property<int>("EmployeeId")
@@ -92,20 +140,10 @@ namespace HealthPassport.DAL.Migrations
                     b.Property<DateTime>("Birthday")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Education")
-                        .IsRequired()
-                        .HasMaxLength(120)
-                        .HasColumnType("nvarchar(120)");
-
                     b.Property<string>("FIO")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("FamilyStatus")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("MailAdress")
                         .IsRequired()
@@ -169,9 +207,8 @@ namespace HealthPassport.DAL.Migrations
                     b.Property<DateTime>("StartWorkingDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Subunit")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("SubunitId")
+                        .HasColumnType("int");
 
                     b.Property<double>("WorkingRate")
                         .HasColumnType("float");
@@ -181,6 +218,8 @@ namespace HealthPassport.DAL.Migrations
                     b.HasIndex("EmployeeId");
 
                     b.HasIndex("JobTypeId");
+
+                    b.HasIndex("SubunitId");
 
                     b.ToTable("Jobs");
                 });
@@ -206,6 +245,23 @@ namespace HealthPassport.DAL.Migrations
                     b.HasKey("JobTypeId");
 
                     b.ToTable("JobTypes");
+                });
+
+            modelBuilder.Entity("HealthPassport.DAL.Models.Subunit", b =>
+                {
+                    b.Property<int>("SubunitId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("SubunitId"));
+
+                    b.Property<string>("SubunitName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("SubunitId");
+
+                    b.ToTable("Subunits");
                 });
 
             modelBuilder.Entity("HealthPassport.DAL.Models.Vaccination", b =>
@@ -255,6 +311,25 @@ namespace HealthPassport.DAL.Migrations
                     b.Navigation("Employee");
                 });
 
+            modelBuilder.Entity("HealthPassport.DAL.Models.Education", b =>
+                {
+                    b.HasOne("HealthPassport.DAL.Models.EducationLevel", "EducationLevel")
+                        .WithMany("Educations")
+                        .HasForeignKey("EducationLevelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HealthPassport.DAL.Models.Employee", "Employee")
+                        .WithMany("Educations")
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("EducationLevel");
+
+                    b.Navigation("Employee");
+                });
+
             modelBuilder.Entity("HealthPassport.DAL.Models.FamilyStatus", b =>
                 {
                     b.HasOne("HealthPassport.DAL.Models.Employee", "Employee")
@@ -280,9 +355,17 @@ namespace HealthPassport.DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("HealthPassport.DAL.Models.Subunit", "Subunit")
+                        .WithMany("Jobs")
+                        .HasForeignKey("SubunitId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Employee");
 
                     b.Navigation("JobType");
+
+                    b.Navigation("Subunit");
                 });
 
             modelBuilder.Entity("HealthPassport.DAL.Models.Vaccination", b =>
@@ -296,11 +379,18 @@ namespace HealthPassport.DAL.Migrations
                     b.Navigation("Employee");
                 });
 
+            modelBuilder.Entity("HealthPassport.DAL.Models.EducationLevel", b =>
+                {
+                    b.Navigation("Educations");
+                });
+
             modelBuilder.Entity("HealthPassport.DAL.Models.Employee", b =>
                 {
                     b.Navigation("AntropologicalResearches");
 
                     b.Navigation("Diseases");
+
+                    b.Navigation("Educations");
 
                     b.Navigation("FamilyStatuses");
 
@@ -310,6 +400,11 @@ namespace HealthPassport.DAL.Migrations
                 });
 
             modelBuilder.Entity("HealthPassport.DAL.Models.JobType", b =>
+                {
+                    b.Navigation("Jobs");
+                });
+
+            modelBuilder.Entity("HealthPassport.DAL.Models.Subunit", b =>
                 {
                     b.Navigation("Jobs");
                 });

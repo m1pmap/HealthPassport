@@ -33,20 +33,24 @@ namespace Dahmira.Pages
         public string code;
         public Employee employee;
         public bool isRegistration;
+        public Job employeeJob;
 
         public LoginPage loginPage;
 
         private readonly IMailSender _mailSender;
         private readonly IServiceProvider _serviceProvider;
         private readonly IEmployeeProcessing _employeeProcessingService;
+        private readonly IJobProcessing _jobProcessingService;
 
-        public WriteMailCodePage(IMailSender mailSender, IServiceProvider serviceProvider, IEmployeeProcessing employeeProcessingService)
+        public WriteMailCodePage(IMailSender mailSender, IServiceProvider serviceProvider, IEmployeeProcessing employeeProcessingService, IJobProcessing jobProcessingService)
         {
             InitializeComponent();
 
             _mailSender = mailSender;
             _serviceProvider = serviceProvider;
             _employeeProcessingService = employeeProcessingService;
+            _jobProcessingService = jobProcessingService;
+
 
             allTextBoxes = new List<TextBox> { textBox1, textBox2, textBox3, textBox4, textBox5, textBox6 };
             allTextBoxes[0].Focus();
@@ -75,11 +79,11 @@ namespace Dahmira.Pages
                         if (isRegistration)
                         {
                             _employeeProcessingService.Add_Employee(employee);
+
+                            employeeJob.EmployeeId = employee.EmployeeId;
+                            _jobProcessingService.Add_Job(employeeJob);
                         }
-                        else
-                        {
-                            //
-                        }
+                        
                         var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
                         mainWindow.settings = new SettingsParameters { employeeMailAdress = employee.MailAdress, employeeFIO = employee.FIO };
                         mainWindow.Show();

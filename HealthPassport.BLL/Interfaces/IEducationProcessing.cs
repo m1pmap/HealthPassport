@@ -12,5 +12,9 @@ namespace HealthPassport.BLL.Interfaces
         bool Add_Education(Education education);
         bool Delete_Education(int id);
         bool Update_Education(Education education);
+
+        List<EducationLevel> GetAllEducationLevels();
+        public string Get_EducationLevelNameById(int id);
+        public int Get_EducationLevelIdByName(string educationLevelName);
     }
 }

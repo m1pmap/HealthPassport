@@ -179,7 +179,7 @@ namespace HealthPassport.Models
             }
             else
             {
-                NewEmployeeVM.FamilyStatus = "Не женат";
+                NewEmployeeVM.FamilyStatus = "Холост";
             }
 
             //Подгрузка антропологических исследований

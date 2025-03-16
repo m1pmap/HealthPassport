@@ -111,7 +111,7 @@ namespace HealthPassport.Models
             {
                 JobId = job.JobId,
                 JobName = jobProcessingService.Get_JobNameById(job.JobTypeId),
-                Subunit = job.Subunit,
+                Subunit = jobProcessingService.Get_SubunitNameById(job.SubunitId),
                 WorkingRate = job.WorkingRate,
                 StartWorkingDate = job.StartWorkingDate.ToString("dd.MM.yyyy"),
             };

@@ -58,7 +58,7 @@ namespace HealthPassport.DAL.Repositories
 
                 if (updateEducation != null)
                 {
-                    updateEducation.EducationType = education.EducationType;
+                    updateEducation.EducationLevelId = education.EducationLevelId;
                     updateEducation.EducationInstitution = education.EducationInstitution;
                     updateEducation.Date = education.Date;
                     _db.SaveChanges();

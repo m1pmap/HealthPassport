@@ -36,6 +36,7 @@ namespace HealthPassport
         private readonly IFileWorker _fileWorker;
         private readonly IServiceProvider _serviceProvider;
         private readonly IShaderEffects _shaderEffectsService;
+        private readonly IJobProcessing _jobProcessingService;
 
         //Коллекция для хранения всех сотрудников
         private ObservableCollection<Employee_ViewModel> employees = new ObservableCollection<Employee_ViewModel>();
@@ -54,7 +55,8 @@ namespace HealthPassport
             IImageUpdater imageUpdater,
             IFileWorker fileWorker,
             IServiceProvider serviceProvider,
-            IShaderEffects shaderEffectsService)
+            IShaderEffects shaderEffectsService,
+            IJobProcessing jobProcessingService)
         {
             InitializeComponent();
 
@@ -63,6 +65,8 @@ namespace HealthPassport
             _employeeProcessingService = employeeProcessingService;
             _imageUpdater = imageUpdater;
             _fileWorker = fileWorker;
+            _serviceProvider = serviceProvider;
+            _jobProcessingService = jobProcessingService;
 
             //Начальное заполнение данными
             List<Employee> dbEmployees = _employeeProcessingService.Get_AllEmployees();
@@ -76,6 +80,9 @@ namespace HealthPassport
             employeesCount_label.Content = $"из {employees.Count}";
             _serviceProvider = serviceProvider;
             _shaderEffectsService = shaderEffectsService;
+
+            NewJob_comboBox.ItemsSource = _jobProcessingService.GetAllJobTypes();
+            NewSubunit_comboBox.ItemsSource = _jobProcessingService.GetAllSubunits();
         }
 
         private void addGrid_Button_Click(object sender, RoutedEventArgs e)
@@ -99,7 +106,8 @@ namespace HealthPassport
         private void addEmployee_button_Click(object sender, RoutedEventArgs e)
         {
             if(!string.IsNullOrWhiteSpace(NewFIO_textBox.Text) ||
-               !string.IsNullOrWhiteSpace(NewJob_textBox.Text) ||
+               !string.IsNullOrWhiteSpace(NewJob_comboBox.Text) ||
+               !string.IsNullOrWhiteSpace(NewSubunit_comboBox.Text) ||
                !string.IsNullOrWhiteSpace(NewMail_textBox.Text) ||
                !string.IsNullOrWhiteSpace(NewDayBirth_textBox.Text) ||
                !string.IsNullOrWhiteSpace(NewMonthBirth_textBox.Text) ||
@@ -116,6 +124,8 @@ namespace HealthPassport
                     Birthday = new DateTime(year, month, day),
                 };
 
+                
+
                 if (addedEmployeeImage.Source.ToString() != "pack://application:,,,/Resources/images/without_picture.png")
                 {
                     newEmployee.Photo = _imageSourceConverter.ConvertFromComponentImageToByteArray(addedEmployeeImage);
@@ -125,10 +135,27 @@ namespace HealthPassport
                     newEmployee.Photo = _imageSourceConverter.ConvertFromFileImageToByteArray("without_image_database.png");
                 }
 
-                _employeeProcessingService.Add_Employee(newEmployee);
+                if (_employeeProcessingService.Add_Employee(newEmployee))
+                {
+                    Job newJob = new Job
+                    {
+                        WorkingRate = 0,
+                        StartWorkingDate = DateTime.Now,
+                        EndWorkingDate = DateTime.MinValue,
+                        EmployeeId = newEmployee.EmployeeId,
+                        JobTypeId = _jobProcessingService.Get_JobTypeIdByName(NewJob_comboBox.Text),
+                        SubunitId = _jobProcessingService.Get_SubunitIdByName(NewSubunit_comboBox.Text),
+                    };
 
-                employees.Add((Employee_ViewModel)newEmployee);
-                employeesCount_label.Content = $"из {employees.Count}";
+                    _jobProcessingService.Add_Job(newJob);
+
+                    employees.Add((Employee_ViewModel)newEmployee);
+                    employeesCount_label.Content = $"из {employees.Count}";
+                }
+                else
+                {
+                    MessageBox.Show("Пользователь не добавлен.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
             else
             {
@@ -173,8 +200,12 @@ namespace HealthPassport
                 else searchGrid_Button_Click(sender, new RoutedEventArgs());
 
                 FIO_textBox.Text = selectedEmployee.FIO;
-                Job_textBox.Text = selectedEmployee.Job;
                 Birthday_textBox.Text = selectedEmployee.Birthday;
+                if (selectedEmployee.Job != string.Empty)
+                    Job_textBox.Text = selectedEmployee.Job;
+                else
+                    Job_textBox.Text = "Не указано";
+
 
                 if (selectedEmployee.Education != string.Empty) 
                     Education_textBox.Text = selectedEmployee.Education;
@@ -212,6 +243,10 @@ namespace HealthPassport
                 _shaderEffectsService.ApplyBlurEffect(this, 20);
 
                 infoPage.ShowDialog();
+
+                int index = employees.IndexOf(selectedEmployee);
+                employees_dataGrid.SelectedItem = null;
+                employees_dataGrid.SelectedIndex = index;
 
                 _shaderEffectsService.ClearEffect(this);
             }
@@ -263,6 +298,11 @@ namespace HealthPassport
                 employeeNum_textBox.Text = (oldCurrentProductIndex + 1).ToString();
                 employees_dataGrid.Focus();
             }
+        }
+
+        private void EmployeeMoreInfo_Click(object sender, RoutedEventArgs e)
+        {
+            employees_dataGrid_MouseDoubleClick(sender, new MouseButtonEventArgs(Mouse.PrimaryDevice, 0, MouseButton.Left));
         }
     }
 }

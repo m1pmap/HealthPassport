@@ -43,6 +43,8 @@ namespace HealthPassport
             services.AddSingleton<NullToEmptyStringConverter>();
             services.AddScoped<IImageUpdater, ImageUpdater_Service>();
             services.AddScoped<IFileWorker, FileWorker_Service>();
+            services.AddScoped<IExcelWorker, ExcelWorker_Service>();
+            services.AddScoped<IWordWorker, WordWorker_Service>();
             services.AddScoped<IShaderEffects, ShaderEffects_Service>();
             //Регистрация BLL сервисов
             services.AddScoped<IMailSender, MailSender_Service>();
@@ -64,6 +66,8 @@ namespace HealthPassport
             services.AddScoped<IFamilyStatus, FamilyStatus_Repository>();
             services.AddScoped<IAntropologicalResearch, AntropologicalResearch_Repository>();
             services.AddScoped<IEducation, Education_Repository>();
+            services.AddScoped<ISubunit, Subunit_Repository>();
+            services.AddScoped<IEducationLevel, EducationLevel_Repository>();
 
             //Регистрация контекста БД
             services.AddDbContext<ApplicationDbContext>();

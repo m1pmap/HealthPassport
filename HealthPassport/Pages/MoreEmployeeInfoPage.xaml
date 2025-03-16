@@ -232,7 +232,8 @@
                                             Height="40" Width="40"
                                             Background="OrangeRed" 
                                             VerticalAlignment="Top"
-                                            ToolTip="Удалить фото" HorizontalAlignment="Left" Margin="5,0,0,0">
+                                            ToolTip="Удалить фото" HorizontalAlignment="Left" Margin="5,0,0,0"
+                                            Click="deletePhoto_button_Click">
 
                                         <Image Source="/resources/images/delete_image.png" Height="27" Width="27" Margin="0,0,0,0"/>
                                     </Button>
@@ -241,7 +242,8 @@
                                             Template="{StaticResource btTemplate}" Width="40"
                                             Background="Coral" 
                                             Margin="5,0,0,0"
-                                            ToolTip="Сохранить в файл" HorizontalAlignment="Left" Height="40">
+                                            ToolTip="Сохранить в файл" HorizontalAlignment="Left" Height="40"
+                                            Click="downloadToFile_button_Click">
 
                                         <Image Source="/resources/images/download_to_file.png" Height="27" Width="27" Margin="0,0,0,0"/>
                                     </Button>
@@ -254,7 +256,8 @@
                                             Background="#FF50CBFF" 
                                             VerticalAlignment="Top" 
                                             Margin="0,0,0,0"
-                                            ToolTip="Сохранить в буфер">
+                                            ToolTip="Сохранить в буфер"
+                                            Click="downloadToClipboard_button_Click">
 
                                         <Image Height="27" Width="27" Margin="0,0,0,0" Source="/resources/images/download_to_clipboard.png"/>
                                     </Button>
@@ -264,7 +267,8 @@
                                             Background="#FF50CBFF" 
                                             VerticalAlignment="Top" 
                                             Margin="5,0,0,0"
-                                            ToolTip="Вставить из буфера">
+                                            ToolTip="Вставить из буфера"
+                                            Click="uploadFromClipboard_Click">
 
                                         <Image Source="/resources/images/upload_from_clipboard.png" Height="27" Width="27" Margin="0,0,0,0"/>
                                     </Button>
@@ -344,9 +348,20 @@
                                             <Image Source="/resources/images/plus.png" Height="30" Width="30" Margin="0,0,0,0"/>
                                         </Button>
 
+                                        <Button x:Name="exportDiseasesCalc_button"
+                                                 Template="{StaticResource btTemplate}" 
+                                                 Height="35" Width="50"
+                                                 Background="#a3a3a4"
+                                                 VerticalAlignment="Center"
+                                                 Margin="0,0,5,0" 
+                                                 ToolTip="Экспортировть болезни сотрудника в Excel"
+                                                Click="exportDiseasesCalc_button_Click">
+                                            <Image Source="/resources/images/calcToExcel.png" Height="35" Width="35" Margin="0,0,0,0"/>
+                                        </Button>
+
                                         <Label Content="Название заболевания:" VerticalAlignment="Center" FontFamily="Arial" FontSize="14" Foreground="Gray"/>
 
-                                        <TextBox x:Name="DiseaseName_textBox" Width="481" FontFamily="Arial" FontSize="15" Margin="0,0,0,0" VerticalAlignment="Center" Height="22"/>
+                                        <TextBox x:Name="DiseaseName_textBox" Width="427" FontFamily="Arial" FontSize="15" Margin="0,0,0,0" VerticalAlignment="Center" Height="22"/>
                                     </StackPanel>
 
                                     <DataGrid x:Name="diseases_dataGrid" AutoGenerateColumns="False" Margin="5,1,5,5" Background="Transparent" Grid.Row="1"
@@ -399,16 +414,27 @@
                                             <Image Source="/resources/images/plus.png" Height="30" Width="30" Margin="0,0,0,0"/>
                                         </Button>
 
+                                        <Button x:Name="exportJobsToCalc_button"
+                                                 Template="{StaticResource btTemplate}" 
+                                                 Height="35" Width="50"
+                                                 Background="#a3a3a4"
+                                                 VerticalAlignment="Center"
+                                                 Margin="0,0,5,0" 
+                                                 ToolTip="Экспортировть должности сотрудника в Excel"
+                                                Click="exportJobsToCalc_button_Click">
+                                            <Image Source="/resources/images/calcToExcel.png" Height="35" Width="35" Margin="0,0,0,0"/>
+                                        </Button>
+
                                         <Label Content="Должность:" VerticalAlignment="Center" FontFamily="Arial" FontSize="14" Foreground="Gray"/>
 
-                                        <Border CornerRadius="5" BorderThickness="1.7" BorderBrush="Gray" Margin="3,12" Width="227">
+                                        <Border CornerRadius="5" BorderThickness="1.7" BorderBrush="Gray" Margin="3,12" Width="204">
                                             <ComboBox x:Name="Job_comboBox" IsEditable="True" Margin="5,0,5,0" BorderThickness="0" Foreground="Gray" FontSize="15" FontFamily="Arial" DisplayMemberPath="JobName"/>
                                         </Border>
 
                                         <Label Content="Подразделение:" VerticalAlignment="Center" FontFamily="Arial" FontSize="14" Foreground="Gray"/>
 
-                                        <Border CornerRadius="5" BorderThickness="1.7" BorderBrush="Gray" Margin="3,12" Width="208">
-                                            <ComboBox x:Name="subunit_comboBox" IsEditable="True" Margin="5,0,5,0" BorderThickness="0" Foreground="Gray" FontSize="15" FontFamily="Arial" DisplayMemberPath="SubmitName"/>
+                                        <Border CornerRadius="5" BorderThickness="1.7" BorderBrush="Gray" Margin="3,12" Width="177">
+                                            <ComboBox x:Name="subunit_comboBox" IsEditable="True" Margin="5,0,5,0" BorderThickness="0" Foreground="Gray" FontSize="15" FontFamily="Arial" DisplayMemberPath="SubunitName"/>
                                         </Border>
                                     </StackPanel>
 
@@ -420,8 +446,46 @@
                                                 BeginningEdit="jobs_dataGrid_BeginningEdit">
 
                                         <DataGrid.Columns>
-                                            <DataGridTextColumn Header="Должность" Binding="{Binding JobName}" Width="2*"/>
-                                            <DataGridTextColumn Header="Подразделение" Binding="{Binding Subunit}" Width="2*"/>
+                                            <DataGridComboBoxColumn Header="Должность" Width="2*"
+                                                                    SelectedItemBinding="{Binding JobName}">
+                                                <DataGridComboBoxColumn.ElementStyle>
+                                                    <Style TargetType="ComboBox">
+                                                        <Setter Property="ItemsSource" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=DataContext.JobTypesValues}"/>
+                                                        <Setter Property="FontSize" Value="14"/>
+                                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                                        <Setter Property="FontFamily" Value="Arial"/>
+                                                    </Style>
+                                                </DataGridComboBoxColumn.ElementStyle>
+                                                <DataGridComboBoxColumn.EditingElementStyle>
+                                                    <Style TargetType="ComboBox">
+                                                        <Setter Property="ItemsSource" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=DataContext.JobTypesValues}"/>
+                                                        <Setter Property="Foreground" Value="Gray"/>
+                                                        <Setter Property="FontSize" Value="14"/>
+                                                        <Setter Property="FontFamily" Value="Arial"/>
+                                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                                    </Style>
+                                                </DataGridComboBoxColumn.EditingElementStyle>
+                                            </DataGridComboBoxColumn>
+
+                                            <DataGridComboBoxColumn Header="Подразделение" Width="2*"
+                                                                    SelectedItemBinding="{Binding Subunit}">
+                                                <DataGridComboBoxColumn.ElementStyle>
+                                                    <Style TargetType="ComboBox">
+                                                        <Setter Property="ItemsSource" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=DataContext.SubunitsValues}"/>
+                                                        <Setter Property="FontSize" Value="14"/>
+                                                        <Setter Property="FontFamily" Value="Arial"/>
+                                                    </Style>
+                                                </DataGridComboBoxColumn.ElementStyle>
+                                                <DataGridComboBoxColumn.EditingElementStyle>
+                                                    <Style TargetType="ComboBox">
+                                                        <Setter Property="ItemsSource" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=DataContext.SubunitsValues}"/>
+                                                        <Setter Property="Foreground" Value="Gray"/>
+                                                        <Setter Property="FontSize" Value="14"/>
+                                                        <Setter Property="FontFamily" Value="Arial"/>
+                                                    </Style>
+                                                </DataGridComboBoxColumn.EditingElementStyle>
+                                            </DataGridComboBoxColumn>
+
                                             <DataGridTextColumn Header="Ставка" Binding="{Binding WorkingRate}" Width="*"/>
                                             <DataGridTextColumn Header="Дата вступления в должность" Binding="{Binding StartWorkingDate}" Width="3*"/>
                                             <DataGridTextColumn Header="Дата окончания" Binding="{Binding EndWorkingDate}" Width="2*"/>
@@ -461,6 +525,17 @@
                                                 ToolTip="Добавить запись"
                                                 Click="addFamilyStatus_button_Click">
                                             <Image Source="/resources/images/plus.png" Height="30" Width="30" Margin="0,0,0,0"/>
+                                        </Button>
+
+                                        <Button x:Name="exportFamilyStatusesToCalc_button"
+                                                 Template="{StaticResource btTemplate}" 
+                                                 Height="35" Width="50"
+                                                 Background="#a3a3a4"
+                                                 VerticalAlignment="Center"
+                                                 Margin="0,0,5,0" 
+                                                 ToolTip="Экспортировть семейные статусы сотрудника в Excel"
+                                                Click="exportFamilyStatusesToCalc_button_Click">
+                                            <Image Source="/resources/images/calcToExcel.png" Height="35" Width="35" Margin="0,0,0,0"/>
                                         </Button>
 
                                         <Label Content="Дата начала семейной жизни" FontFamily="Arial" VerticalAlignment="Center" Foreground="Gray" FontSize="14"/>
@@ -518,13 +593,24 @@
                                             <Image Source="/resources/images/plus.png" Height="30" Width="30" Margin="0,0,0,0"/>
                                         </Button>
 
-                                        
+                                        <Button x:Name="exportAntropologicalResearchesCalc_button"
+                                                 Template="{StaticResource btTemplate}" 
+                                                 Height="35" Width="50"
+                                                 Background="#a3a3a4"
+                                                 VerticalAlignment="Center"
+                                                 Margin="0,0,5,0" 
+                                                 ToolTip="Экспортировть антропологические исследования сотрудника в Excel"
+                                                Click="exportAntropologicalResearchesCalc_button_Click">
+                                            <Image Source="/resources/images/calcToExcel.png" Height="35" Width="35" Margin="0,0,0,0"/>
+                                        </Button>
+
+
                                         <Label Content="Вес:" VerticalAlignment="Center" FontFamily="Arial" FontSize="14" Foreground="Gray"/>
-                                        <TextBox x:Name="weight_textBox" Width="65" FontFamily="Arial" FontSize="15" Margin="0,0,0,0" VerticalAlignment="Center" Height="22" MaxLength="4"
+                                        <TextBox x:Name="weight_textBox" Width="255" FontFamily="Arial" FontSize="15" Margin="0,0,0,0" VerticalAlignment="Center" Height="22" MaxLength="4"
                                                  PreviewTextInput="onlyNumbersTextBox_PreviewTextInput"/>
                                         
                                         <Label Content="Рост:" VerticalAlignment="Center" FontFamily="Arial" FontSize="14" Foreground="Gray"/>
-                                        <TextBox x:Name="height_textBox" Width="65" FontFamily="Arial" FontSize="15" Margin="0,0,0,0" VerticalAlignment="Center" Height="22" MaxLength="4"
+                                        <TextBox x:Name="height_textBox" Width="255" FontFamily="Arial" FontSize="15" Margin="0,0,0,0" VerticalAlignment="Center" Height="22" MaxLength="4"
                                                  PreviewTextInput="onlyNumbersTextBox_PreviewTextInput"/>
                                     </StackPanel>
 
@@ -577,9 +663,20 @@
                                             <Image Source="/resources/images/plus.png" Height="30" Width="30" Margin="0,0,0,0"/>
                                         </Button>
 
+                                        <Button x:Name="exportVaccinationsCalc_button"
+                                                 Template="{StaticResource btTemplate}" 
+                                                 Height="35" Width="50"
+                                                 Background="#a3a3a4"
+                                                 VerticalAlignment="Center"
+                                                 Margin="0,0,5,0" 
+                                                 ToolTip="Экспортировть прививки сотрудника в Excel"
+                                                Click="exportVaccinationsCalc_button_Click">
+                                            <Image Source="/resources/images/calcToExcel.png" Height="35" Width="35" Margin="0,0,0,0"/>
+                                        </Button>
+
                                         <Label Content="Название прививки:" VerticalAlignment="Center" FontFamily="Arial" FontSize="14" Foreground="Gray"/>
 
-                                        <TextBox x:Name="VaccinationName_textBox" Width="505" FontFamily="Arial" FontSize="15" Margin="0,0,0,0" VerticalAlignment="Center" Height="22"/>
+                                        <TextBox x:Name="VaccinationName_textBox" Width="451" FontFamily="Arial" FontSize="15" Margin="0,0,0,0" VerticalAlignment="Center" Height="22"/>
                                     </StackPanel>
 
                                     <DataGrid x:Name="vaccinations_dataGrid" AutoGenerateColumns="False" Margin="5,1,5,5" Background="Transparent" Grid.Row="1"
@@ -630,14 +727,25 @@
                                             <Image Source="/resources/images/plus.png" Height="30" Width="30" Margin="0,0,0,0"/>
                                         </Button>
 
-                                        <Label Content="Учреждения образования:" VerticalAlignment="Center" FontFamily="Arial" FontSize="14" Foreground="Gray"/>
+                                        <Button x:Name="exportEducationsCalc_button"
+                                                 Template="{StaticResource btTemplate}" 
+                                                 Height="35" Width="50"
+                                                 Background="#a3a3a4"
+                                                 VerticalAlignment="Center"
+                                                 Margin="0,0,5,0" 
+                                                 ToolTip="Экспортировть образования сотрудника в Excel"
+                                                Click="exportEducationsCalc_button_Click">
+                                            <Image Source="/resources/images/calcToExcel.png" Height="35" Width="35" Margin="0,0,0,0"/>
+                                        </Button>
 
-                                        <TextBox x:Name="EducationInstitutionName_textBox" Width="251" FontFamily="Arial" FontSize="15" Margin="0,0,0,0" VerticalAlignment="Center" Height="22"/>
+                                        <Label Content="Учреждение:" VerticalAlignment="Center" FontFamily="Arial" FontSize="14" Foreground="Gray"/>
+
+                                        <TextBox x:Name="EducationInstitutionName_textBox" Width="229" FontFamily="Arial" FontSize="15" Margin="0,0,0,0" VerticalAlignment="Center" Height="22"/>
 
                                         <Label Content="Уровень:" VerticalAlignment="Center" FontFamily="Arial" FontSize="14" Foreground="Gray"/>
 
-                                        <Border CornerRadius="5" BorderThickness="1.7" BorderBrush="Gray" Margin="3,12" Width="143">
-                                            <ComboBox x:Name="EducationType_comboBox" IsEditable="True" Margin="5,0,5,0" BorderThickness="0" Foreground="Gray" FontSize="15" FontFamily="Arial" DisplayMemberPath="EducationType"/>
+                                        <Border CornerRadius="5" BorderThickness="1.7" BorderBrush="Gray" Margin="3,12" Width="198">
+                                            <ComboBox x:Name="EducationType_comboBox" IsEditable="True" Margin="5,0,5,0" BorderThickness="0" Foreground="Gray" FontSize="15" FontFamily="Arial" DisplayMemberPath="EducationLevelName"/>
                                         </Border>
                                     </StackPanel>
 
@@ -650,7 +758,29 @@
 
                                         <DataGrid.Columns>
                                             <DataGridTextColumn Header="Учреждение образования" Binding="{Binding EducationInstitution}" Width="4*"/>
-                                            <DataGridTextColumn Header="Уровень образования" Binding="{Binding EducationType}" Width="1.5*"/>
+
+                                            <DataGridComboBoxColumn Header="Уровень образования" Width="1.5*"
+                                                                    SelectedItemBinding="{Binding EducationType}">
+                                                <DataGridComboBoxColumn.ElementStyle>
+                                                    <Style TargetType="ComboBox">
+                                                        <Setter Property="ItemsSource" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=DataContext.EducationLevelsValue}"/>
+                                                        <Setter Property="FontSize" Value="14"/>
+                                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                                        <Setter Property="FontFamily" Value="Arial"/>
+                                                    </Style>
+                                                </DataGridComboBoxColumn.ElementStyle>
+                                                <DataGridComboBoxColumn.EditingElementStyle>
+                                                    <Style TargetType="ComboBox">
+                                                        <Setter Property="ItemsSource" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}, Path=DataContext.EducationLevelsValue}"/>
+                                                        <Setter Property="Foreground" Value="Gray"/>
+                                                        <Setter Property="FontSize" Value="14"/>
+                                                        <Setter Property="FontFamily" Value="Arial"/>
+                                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                                    </Style>
+                                                </DataGridComboBoxColumn.EditingElementStyle>
+                                            </DataGridComboBoxColumn>
+
+                                            <!--<DataGridTextColumn Header="Уровень образования" Binding="{Binding EducationType}" Width="1.5*"/>-->
                                             <DataGridTextColumn Header="Дата окончания" Binding="{Binding Date}" Width="*"/>
                                         </DataGrid.Columns>
                                     </DataGrid>
@@ -662,8 +792,8 @@
 
                     <Border CornerRadius="10" Grid.Row="2" Grid.ColumnSpan="2" Margin="10,0,10,10" Background="White">
                         <StackPanel Orientation="Horizontal">
-                            <Label Content="Отправить сообщение сотруднику:" FontFamily="Arial" Foreground="Gray" FontSize="14" VerticalAlignment="Center" Margin="3,0,0,0"/>
-                            <TextBox x:Name="sendMessage_textBox" Width="460" FontFamily="Arial" FontSize="15" VerticalAlignment="Center" Height="22"/>
+                            <Label Content="Cообщение для сотрудника:" FontFamily="Arial" Foreground="Gray" FontSize="14" VerticalAlignment="Center" Margin="3,0,0,0"/>
+                            <TextBox x:Name="sendMessage_textBox" Width="503" FontFamily="Arial" FontSize="15" VerticalAlignment="Center" Height="22"/>
                             <Button x:Name="sendMessage_button"
                                     Template="{StaticResource btTemplate}" 
                                     Height="30" Width="30"
@@ -698,7 +828,8 @@
                     Background="Gray"  
                     HorizontalAlignment="Left"
                     Margin="5,5,0,0"  
-                    ToolTip="Экспортировать в Excel мед. карту">
+                    ToolTip="Экспортировать в Excel мед. карту"
+                    Click="CalcToExcel_button_Click">
 
                 <Image Source="pack://application:,,,/resources/images/calcToExcel.png" Height="30" Width="50" VerticalAlignment="Top" Margin="0,0,0,0"/>
             </Button>

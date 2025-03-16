@@ -58,7 +58,7 @@ namespace HealthPassport.DAL.Repositories
 
                 if (updateJob != null)
                 {
-                    updateJob.Subunit = newJob.Subunit;
+                    updateJob.SubunitId = newJob.SubunitId;
                     updateJob.WorkingRate = newJob.WorkingRate;
                     updateJob.StartWorkingDate = newJob.StartWorkingDate;
                     updateJob.EndWorkingDate = newJob.EndWorkingDate;

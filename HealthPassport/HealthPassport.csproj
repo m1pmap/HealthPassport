@@ -47,12 +47,17 @@
     <None Remove="Resources\images\stop.png" />
     <None Remove="Resources\images\upload_from_clipboard.png" />
     <None Remove="Resources\images\upload_from_file.png" />
+    <None Remove="Resources\images\user.png" />
     <None Remove="Resources\images\withoutDependency.png" />
     <None Remove="Resources\images\without_image_database.png" />
     <None Remove="Resources\images\without_picture.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Azure.Core" Version="1.38.0" />
+    <PackageReference Include="Azure.Identity" Version="1.11.4" />
+    <PackageReference Include="DocumentFormat.OpenXml" Version="3.2.0" />
+    <PackageReference Include="EPPlus" Version="7.6.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.1">
       <PrivateAssets>all</PrivateAssets>
@@ -64,10 +69,12 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.1" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\HealthPassport.BLL\HealthPassport.BLL.csproj" />
+    <ProjectReference Include="..\HealthPassport.DAL\HealthPassport.DAL.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -102,6 +109,7 @@
     <Resource Include="Resources\images\sort.png" />
     <Resource Include="Resources\images\upload_from_clipboard.png" />
     <Resource Include="Resources\images\upload_from_file.png" />
+    <Resource Include="Resources\images\user.png" />
     <Resource Include="Resources\images\without_image_database.png" />
     <Resource Include="Resources\images\without_picture.png" />
   </ItemGroup>

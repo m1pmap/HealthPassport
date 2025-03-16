@@ -14,11 +14,14 @@ namespace HealthPassport.BLL.Services
     {
         private readonly IJob _jobRepository;
         private readonly IJobType _jobTypeRepository;
+        private readonly ISubunit _subunitRepository;
         public JobProcessing_Service(IJob jobRepository,
-            IJobType jobTypeRepository)
+            IJobType jobTypeRepository,
+            ISubunit subunitRepository)
         {
             _jobRepository = jobRepository;
             _jobTypeRepository = jobTypeRepository;
+            _subunitRepository = subunitRepository;
         }
         public bool Add_Job(Job newJob)
         {
@@ -35,6 +38,11 @@ namespace HealthPassport.BLL.Services
             return _jobTypeRepository.GetAllJobTypes();
         }
 
+        public List<Subunit> GetAllSubunits()
+        {
+            return _subunitRepository.GetAllSubunits();
+        }
+
         public string Get_JobNameById(int id)
         {
             return _jobTypeRepository.Get_JobNameById(id);
@@ -44,6 +52,16 @@ namespace HealthPassport.BLL.Services
         {
             return _jobTypeRepository.Get_JobTypeIdByName(jobName);
 
+        }
+
+        public int Get_SubunitIdByName(string subunitName)
+        {
+            return _subunitRepository.Get_SubunitIdByName(subunitName);
+        }
+
+        public string Get_SubunitNameById(int id)
+        {
+            return _subunitRepository.Get_SubunitNameById(id);
         }
 
         public bool Update_Job(Job newJob)

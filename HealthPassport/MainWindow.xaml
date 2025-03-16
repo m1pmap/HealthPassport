@@ -195,7 +195,7 @@
                 <!--Кнопка смены поиска или добавления прайсов-->
 
                 <!--Сетка с функционалом добавления-->
-                <Grid x:Name="addGrid" Visibility="Hidden" Grid.Row="1" HorizontalAlignment="Left" Width="1905">
+                <Grid x:Name="addGrid" Visibility="Visible" Grid.Row="1" HorizontalAlignment="Left" Width="1905">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="124"/>
                         <RowDefinition Height="60.987"/>
@@ -228,12 +228,19 @@
 
                         <StackPanel Orientation="Horizontal">
                             <Label Content="Должность" Foreground="Gray" Margin="0,0,0,0" FontSize="12" FontFamily="Arial"/>
-                            <Label Content="Почта" Foreground="Gray" Margin="222,0,0,0" FontFamily="Arial" FontSize="12"/>
+                            <Label Content="Подразделение" Foreground="Gray" Margin="130,0,0,0" FontFamily="Arial" FontSize="12"/>
+                            <Label Content="Почта" Foreground="Gray" Margin="105,0,0,0" FontFamily="Arial" FontSize="12"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal" Margin="0,-3,0,0">
-                            <TextBox x:Name="NewJob_textBox" Width="282" HorizontalAlignment="Left" Height="22" FontFamily="Arial" FontSize="15"/>
-                            <TextBox x:Name="NewMail_textBox" Margin="10,0,0,0" Width="389" Height="22" FontFamily="Arial" FontSize="15"/>
+                            <Border CornerRadius="4" BorderThickness="1.7" BorderBrush="Gray" Margin="0,-1" Width="191" Height="22">
+                                <ComboBox x:Name="NewJob_comboBox" IsEditable="True" Margin="5,0,5,0" BorderThickness="0" Foreground="Gray" FontSize="15" FontFamily="Arial" DisplayMemberPath="JobName"/>
+                            </Border>
+                            <Border CornerRadius="4" BorderThickness="1.7" BorderBrush="Gray" Margin="10,-1,0,-1" Width="191" Height="22">
+                                <ComboBox x:Name="NewSubunit_comboBox" IsEditable="True" Margin="5,0,5,0" BorderThickness="0" Foreground="Gray" FontSize="15" FontFamily="Arial" DisplayMemberPath="SubunitName"/>
+                            </Border>
+                            <!--<TextBox x:Name="NewJob_textBox" Width="282" HorizontalAlignment="Left" Height="22" FontFamily="Arial" FontSize="15"/>-->
+                            <TextBox x:Name="NewMail_textBox" Margin="10,0,0,0" Width="280" Height="22" FontFamily="Arial" FontSize="15"/>
                         </StackPanel>
 
                     </StackPanel>
@@ -285,7 +292,7 @@
                 </Grid>
 
                 <!--Сетка с функционалом поиска и добавления в расчётку-->
-                <Grid x:Name="searchGrid" Visibility="Visible" HorizontalAlignment="Left" Grid.Row="1" Width="1905">
+                <Grid x:Name="searchGrid" Visibility="Hidden" HorizontalAlignment="Left" Grid.Row="1" Width="1905">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="124"/>
                         <RowDefinition Height="60.987"/>
@@ -330,7 +337,8 @@
                             Width="Auto"
                             Height="40"
                             Template="{StaticResource btTemplate}" FontFamily="Arial Black" 
-                            Background="Coral" Foreground="White" FontSize="14"  Margin="6,0,5,20" Grid.ColumnSpan="2"/>
+                            Background="Coral" Foreground="White" FontSize="14"  Margin="6,0,5,20" Grid.ColumnSpan="2"
+                            Click="EmployeeMoreInfo_Click"/>
 
                     <Image x:Name="EmployeeImage" Margin="10,26,9,10" Source="/Resources/images/without_picture.png" Grid.Column="2"/>
 
@@ -360,7 +368,7 @@
                         Grid.Row="1"
                         Click="searchGrid_Button_Click">
 
-                    <Image Source="/Resources/images/search.png" Height="35" Width="38" Margin="-30,0,0,0"/>
+                    <Image Source="/Resources/images/user.png" Height="40" Width="40" Margin="-30,0,0,0"/>
                 </Button>
                 <Button x:Name="addGrid_Button" Visibility="Visible"
                         Template="{StaticResource btTemplate}" 
@@ -452,7 +460,7 @@
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
 
-                            <DataGridTextColumn Header="Должность"  Binding="{Binding Job}" Width="20*" MinWidth="100" IsReadOnly="False">
+                            <DataGridTextColumn Header="Должность"  Binding="{Binding Job, Converter={StaticResource NullToEmptyStringConverter}}" Width="20*" MinWidth="100" IsReadOnly="False">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style TargetType="TextBlock">
                                         <Setter Property="TextWrapping" Value="Wrap"/>

@@ -95,6 +95,8 @@ namespace HealthPassport.DAL.Repositories
                             .Include(e => e.AntropologicalResearches)
                             .Include(e => e.Jobs)
                                 .ThenInclude(j => j.JobType)
+                            .Include(e => e.Jobs)
+                                .ThenInclude(j => j.Subunit)
                             .FirstOrDefault(u => u.EmployeeId == employee.EmployeeId);
 
                 return connectedEmployee;

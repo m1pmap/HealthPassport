@@ -12,15 +12,26 @@ namespace HealthPassport.DAL.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "EducationLevels",
+                columns: table => new
+                {
+                    EducationLevelId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    EducationLevelName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EducationLevels", x => x.EducationLevelId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Employees",
                 columns: table => new
                 {
                     EmployeeId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FIO = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Education = table.Column<string>(type: "nvarchar(120)", maxLength: 120, nullable: false),
                     Birthday = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    FamilyStatus = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     MailAdress = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Photo = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
                 },
@@ -45,6 +56,41 @@ namespace HealthPassport.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Subunits",
+                columns: table => new
+                {
+                    SubunitId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SubunitName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Subunits", x => x.SubunitId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AntropologicalResearches",
+                columns: table => new
+                {
+                    AntropologicalResearchId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Weight = table.Column<double>(type: "float", nullable: false),
+                    Height = table.Column<double>(type: "float", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EmployeeId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AntropologicalResearches", x => x.AntropologicalResearchId);
+                    table.ForeignKey(
+                        name: "FK_AntropologicalResearches_Employees_EmployeeId",
+                        column: x => x.EmployeeId,
+                        principalTable: "Employees",
+                        principalColumn: "EmployeeId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Diseases",
                 columns: table => new
                 {
@@ -60,6 +106,35 @@ namespace HealthPassport.DAL.Migrations
                     table.PrimaryKey("PK_Diseases", x => x.DiseaseId);
                     table.ForeignKey(
                         name: "FK_Diseases_Employees_EmployeeId",
+                        column: x => x.EmployeeId,
+                        principalTable: "Employees",
+                        principalColumn: "EmployeeId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Educations",
+                columns: table => new
+                {
+                    EducationId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    EducationType = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    EducationInstitution = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EmployeeId = table.Column<int>(type: "int", nullable: false),
+                    EducationLevelId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Educations", x => x.EducationId);
+                    table.ForeignKey(
+                        name: "FK_Educations_EducationLevels_EducationLevelId",
+                        column: x => x.EducationLevelId,
+                        principalTable: "EducationLevels",
+                        principalColumn: "EducationLevelId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Educations_Employees_EmployeeId",
                         column: x => x.EmployeeId,
                         principalTable: "Employees",
                         principalColumn: "EmployeeId",
@@ -115,12 +190,12 @@ namespace HealthPassport.DAL.Migrations
                 {
                     JobId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Subunit = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     WorkingRate = table.Column<double>(type: "float", nullable: false),
                     StartWorkingDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndWorkingDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EmployeeId = table.Column<int>(type: "int", nullable: false),
-                    JobTypeId = table.Column<int>(type: "int", nullable: false)
+                    JobTypeId = table.Column<int>(type: "int", nullable: false),
+                    SubunitId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -137,11 +212,32 @@ namespace HealthPassport.DAL.Migrations
                         principalTable: "JobTypes",
                         principalColumn: "JobTypeId",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Jobs_Subunits_SubunitId",
+                        column: x => x.SubunitId,
+                        principalTable: "Subunits",
+                        principalColumn: "SubunitId",
+                        onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AntropologicalResearches_EmployeeId",
+                table: "AntropologicalResearches",
+                column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Diseases_EmployeeId",
                 table: "Diseases",
+                column: "EmployeeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Educations_EducationLevelId",
+                table: "Educations",
+                column: "EducationLevelId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Educations_EmployeeId",
+                table: "Educations",
                 column: "EmployeeId");
 
             migrationBuilder.CreateIndex(
@@ -160,6 +256,11 @@ namespace HealthPassport.DAL.Migrations
                 column: "JobTypeId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Jobs_SubunitId",
+                table: "Jobs",
+                column: "SubunitId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Vaccinations_EmployeeId",
                 table: "Vaccinations",
                 column: "EmployeeId");
@@ -169,7 +270,13 @@ namespace HealthPassport.DAL.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "AntropologicalResearches");
+
+            migrationBuilder.DropTable(
                 name: "Diseases");
+
+            migrationBuilder.DropTable(
+                name: "Educations");
 
             migrationBuilder.DropTable(
                 name: "FamilyStatuses");
@@ -181,7 +288,13 @@ namespace HealthPassport.DAL.Migrations
                 name: "Vaccinations");
 
             migrationBuilder.DropTable(
+                name: "EducationLevels");
+
+            migrationBuilder.DropTable(
                 name: "JobTypes");
+
+            migrationBuilder.DropTable(
+                name: "Subunits");
 
             migrationBuilder.DropTable(
                 name: "Employees");

@@ -1,4 +1,6 @@
-﻿using HealthPassport.DAL.Models;
+﻿using HealthPassport.BLL.Interfaces;
+using HealthPassport.DAL.Models;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -71,10 +73,12 @@ namespace HealthPassport.Models
 
         public static explicit operator Education_ViewModel(Education education)
         {
+            var educationProcessingService = ServiceLocator.Provider.GetService<IEducationProcessing>();
+
             return new Education_ViewModel
             {
                 EducationId = education.EducationId,
-                EducationType = education.EducationType,
+                EducationType = educationProcessingService.Get_EducationLevelNameById(education.EducationLevelId),
                 EducationInstitution = education.EducationInstitution,
                 Date = education.Date.ToString("dd.MM.yyyy"),
             };

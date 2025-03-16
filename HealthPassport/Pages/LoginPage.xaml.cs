@@ -1,6 +1,7 @@
 ﻿using Dahmira.Pages;
 using HealthPassport.BLL.Interfaces;
 using HealthPassport.BLL.Models;
+using HealthPassport.DAL.Interfaces;
 using HealthPassport.DAL.Models;
 using HealthPassport.Interfaces;
 using HealthPassport.Services;
@@ -50,8 +51,8 @@ namespace HealthPassport.Pages
 
             //Функционал
 
-            List<JobType> jobTypes = _jobProcessingService.GetAllJobTypes();
-            Job_comboBox.ItemsSource = jobTypes;
+            Job_comboBox.ItemsSource = _jobProcessingService.GetAllJobTypes();
+            Subunit_comboBox.ItemsSource = _jobProcessingService.GetAllSubunits();
 
             if (File.Exists("settings.json"))
             {
@@ -115,9 +116,20 @@ namespace HealthPassport.Pages
                                         FIO = $"{Surname_textBox.Text} {Name_textBox.Text} {SecondName_textBox.Text}",
                                         Birthday = (DateTime)Birthday_datePicker.SelectedDate,
                                         MailAdress = SignUpMail_textBox.Text,
-                                        Photo = _imageSourceConverter.ConvertFromFileImageToByteArray("without_image_database.png")
+                                        Photo = _imageSourceConverter.ConvertFromFileImageToByteArray("without_image_database.png"),
                                     };
+
+                                    Job employeeJob = new Job
+                                    {
+                                         SubunitId = _jobProcessingService.Get_SubunitIdByName(Subunit_comboBox.Text),
+                                         JobTypeId = _jobProcessingService.Get_JobTypeIdByName(Job_comboBox.Text),
+                                         StartWorkingDate = DateTime.Now,
+                                         EndWorkingDate = DateTime.MinValue,
+                                         WorkingRate = 805
+                                    };
+
                                     writeMailCodePage.employee = registerEmployee;
+                                    writeMailCodePage.employeeJob = employeeJob;
                                     writeMailCodePage.isRegistration = true;
                                     _shaderEffectsService.ApplyBlurEffect(this, 10);
 

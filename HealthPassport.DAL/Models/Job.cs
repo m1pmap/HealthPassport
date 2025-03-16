@@ -11,14 +11,15 @@ namespace HealthPassport.DAL.Models
     {
         [Key]
         public int JobId { get; set; }
-        public string Subunit {  get; set; }
         public double WorkingRate {  get; set; }
         public DateTime StartWorkingDate {  get; set; }
         public DateTime EndWorkingDate {  get; set; }
         public int EmployeeId { get; set; }
         public int JobTypeId { get; set; }
+        public int SubunitId { get; set; }
 
         public virtual JobType JobType { get; set; }
+        public virtual Subunit Subunit { get; set; }
         public virtual Employee Employee { get; set; }
     }
 }

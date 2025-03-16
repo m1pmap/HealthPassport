@@ -18,6 +18,8 @@ namespace HealthPassport.DAL
         public DbSet<FamilyStatus> FamilyStatuses { get; set; }
         public DbSet<AntropologicalResearch> AntropologicalResearches { get; set; }
         public DbSet<Education> Educations { get; set; }
+        public DbSet<Subunit> Subunits { get; set; }
+        public DbSet<EducationLevel> EducationLevels { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("Data Source = (LocalDB)\\MSSQLLocalDB; Database=HealthPassport;  AttachDbFilename=|DataDirectory|HealthPassport.mdf; Trusted_Connection=True;MultipleActiveResultSets=true; Integrated Security=True;Connect Timeout=30; TrustServerCertificate=True");
@@ -72,6 +74,18 @@ namespace HealthPassport.DAL
                 .HasOne(j => j.JobType)
                 .WithMany(j => j.Jobs)
                 .HasForeignKey(j => j.JobTypeId);
+
+            //Связывание Job и Subunit
+            modelBuilder.Entity<Job>()
+                .HasOne(j => j.Subunit)
+                .WithMany(s => s.Jobs)
+                .HasForeignKey(s => s.SubunitId);
+
+            //Связывание Education и EducationLevel
+            modelBuilder.Entity<Education>()
+                .HasOne(e => e.EducationLevel)
+                .WithMany(el => el.Educations)
+                .HasForeignKey(el => el.EducationLevelId);
         }
     }
 }
