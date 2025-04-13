@@ -8,18 +8,19 @@ using System.Threading.Tasks;
 
 namespace HealthPassport.DAL.Repositories
 {
-    public class Education_Repository : IEducation
+    public class Education_Repository : ICudRepository<Education>
     {
         private readonly ApplicationDbContext _db;
         public Education_Repository(ApplicationDbContext db)
         {
             _db = db;
         }
-        public bool Add_Education(Education education)
+
+        public bool Add_Item(Education entity)
         {
             try
             {
-                _db.Educations.Add(education);
+                _db.Educations.Add(entity);
                 _db.SaveChanges();
 
                 return true;
@@ -30,7 +31,7 @@ namespace HealthPassport.DAL.Repositories
             }
         }
 
-        public bool Delete_Education(int id)
+        public bool Delete_Item(int id)
         {
             try
             {
@@ -50,17 +51,22 @@ namespace HealthPassport.DAL.Repositories
             }
         }
 
-        public bool Update_Education(Education education)
+        public bool Update_Item(Education entity)
         {
             try
             {
-                Education updateEducation = _db.Educations.FirstOrDefault(e => e.EducationId == education.EducationId);
+                Education updateEducation = _db.Educations.FirstOrDefault(e => e.EducationId == entity.EducationId);
 
                 if (updateEducation != null)
                 {
-                    updateEducation.EducationLevelId = education.EducationLevelId;
-                    updateEducation.EducationInstitution = education.EducationInstitution;
-                    updateEducation.Date = education.Date;
+                    if(updateEducation.EducationLevelId != entity.EducationLevelId)
+                        updateEducation.EducationLevelId = entity.EducationLevelId;
+
+                    if(updateEducation.EducationInstitution != entity.EducationInstitution)
+                        updateEducation.EducationInstitution = entity.EducationInstitution;
+
+                    if(updateEducation.Date != entity.Date)
+                        updateEducation.Date = entity.Date;
                     _db.SaveChanges();
                 }
                 return true;

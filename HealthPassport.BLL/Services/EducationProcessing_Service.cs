@@ -9,44 +9,27 @@ using System.Threading.Tasks;
 
 namespace HealthPassport.BLL.Services
 {
-    public class EducationProcessing_Service : IEducationProcessing
+    public class EducationProcessing_Service : ICudProcessing<Education>
     {
-        private readonly IEducation _educationRepository;
-        private readonly IEducationLevel _educationLevelRepository;
-        public EducationProcessing_Service(IEducation educationRepository, IEducationLevel educationLevelRepository) 
+        private readonly ICudRepository<Education> _educationRepository;
+        public EducationProcessing_Service(ICudRepository<Education> educationRepository) 
         {
             _educationRepository = educationRepository;
-            _educationLevelRepository = educationLevelRepository;
-        }
-        public bool Add_Education(Education education)
-        {
-            return _educationRepository.Add_Education(education);
         }
 
-        public bool Delete_Education(int id)
+        public bool Add_Item(Education entity)
         {
-            return _educationRepository.Delete_Education(id);
+            return _educationRepository.Add_Item(entity);
         }
 
-        public List<EducationLevel> GetAllEducationLevels()
+        public bool Delete_Item(int id)
         {
-            return _educationLevelRepository.GetAllEducationLevels();
+            return _educationRepository.Delete_Item(id);
         }
 
-        public int Get_EducationLevelIdByName(string educationLevelName)
+        public bool Update_Item(Education entity)
         {
-            return _educationLevelRepository.Get_EducationLevelIdByName(educationLevelName);
-        }
-
-        public string Get_EducationLevelNameById(int id)
-        {
-            return _educationLevelRepository.Get_EducationLevelNameById(id);
-
-        }
-
-        public bool Update_Education(Education education)
-        {
-            return _educationRepository.Update_Education(education);
+            return _educationRepository.Update_Item(entity);
         }
     }
 }

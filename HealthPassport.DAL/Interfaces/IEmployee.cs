@@ -8,12 +8,11 @@ using System.Threading.Tasks;
 
 namespace HealthPassport.DAL.Interfaces
 {
-    public interface IEmployee
+    public interface IEmployee : ICudRepository<Employee>
     {
-        bool Add_Employee(Employee employee);
         List<Employee> Get_AllEmployees();
-        bool Delete_Employee(int id);
-        bool Update_Employee(Employee employee);
         Employee Connect_EmployeeInformation(Employee employee);
+        JobType Get_EmployeeJobType(int id);
+        void SetCurrentEmployeeId(int id);
     }
 }

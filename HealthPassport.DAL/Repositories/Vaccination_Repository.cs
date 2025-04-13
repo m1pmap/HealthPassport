@@ -8,18 +8,19 @@ using System.Threading.Tasks;
 
 namespace HealthPassport.DAL.Repositories
 {
-    public class Vaccination_Repository : IVaccination
+    public class Vaccination_Repository : ICudRepository<Vaccination>
     {
         private readonly ApplicationDbContext _db;
         public Vaccination_Repository(ApplicationDbContext db) 
         {
             _db = db;
         }
-        public bool Add_Vaccination(Vaccination newVaccination)
+
+        public bool Add_Item(Vaccination entity)
         {
             try
             {
-                _db.Vaccinations.Add(newVaccination);
+                _db.Vaccinations.Add(entity);
                 _db.SaveChanges();
 
                 return true;
@@ -30,7 +31,7 @@ namespace HealthPassport.DAL.Repositories
             }
         }
 
-        public bool Delete_Vaccination(int id)
+        public bool Delete_Item(int id)
         {
             try
             {
@@ -50,16 +51,19 @@ namespace HealthPassport.DAL.Repositories
             }
         }
 
-        public bool Update_Vaccination(Vaccination vaccination)
+        public bool Update_Item(Vaccination entity)
         {
             try
             {
-                Vaccination updateVaccination = _db.Vaccinations.FirstOrDefault(e => e.VaccinationId == vaccination.VaccinationId);
+                Vaccination updateVaccination = _db.Vaccinations.FirstOrDefault(e => e.VaccinationId == entity.VaccinationId);
 
                 if (updateVaccination != null)
                 {
-                    updateVaccination.Name = vaccination.Name;
-                    updateVaccination.Date = vaccination.Date;
+                    if(updateVaccination.Name != entity.Name)
+                        updateVaccination.Name = entity.Name;
+                    
+                    if(updateVaccination.Date != entity.Date)
+                        updateVaccination.Date = entity.Date;
                     _db.SaveChanges();
                 }
                 return true;

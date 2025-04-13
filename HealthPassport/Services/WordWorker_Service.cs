@@ -22,10 +22,12 @@ using DocumentFormat.OpenXml.Vml;
 using DocumentFormat.OpenXml;
 using Color = DocumentFormat.OpenXml.Wordprocessing.Color;
 using DocumentFormat.OpenXml.Drawing.Charts;
+using HealthPassport.Interfaces;
+using System.Collections.ObjectModel;
 
 namespace HealthPassport.Services
-{
-    public class WordWorker_Service : IWordWorker
+{ 
+    public class WordWorker_Service : IExportWorker
     {
         private readonly ByteArrayToImageSourceConverter_Service _imageSourceConverter;
         public WordWorker_Service(ByteArrayToImageSourceConverter_Service imageSourceConverter)
@@ -54,8 +56,8 @@ namespace HealthPassport.Services
 
         public void exportEmployeeInfo(Employee_ViewModel employee)
         {
-            try
-            {
+            //try
+            //{
                 SaveFileDialog saveFileDialog = new SaveFileDialog
                 {
                     Filter = "Word Files (*.doc)|*.doc",
@@ -120,10 +122,14 @@ namespace HealthPassport.Services
 
                         // Добавление ячейки с текстом
                         TableCell textCell = new TableCell();
-                        textCell.Append(SetSimpleParagraphStyles(new Paragraph(new Run(new Text("Ваша строка текста 1\nasdad"))), JustificationValues.Left, false));
-                        textCell.Append(SetSimpleParagraphStyles(new Paragraph(new Run(new Text("Ваша строка текста 1"))), JustificationValues.Left, false));
-                        textCell.Append(SetSimpleParagraphStyles(new Paragraph(new Run(new Text("Ваша строка текста 1"))), JustificationValues.Left, false));
-                        textCell.Append(paragraphProperties);
+                        textCell.Append(SetSimpleParagraphStyles(new Paragraph(new Run(new Text($"Дата рождения: {employee.Birthday}"))), JustificationValues.Left, false));
+                        textCell.Append(SetSimpleParagraphStyles(new Paragraph(new Run(new Text($"Должность: {employee.Job}"))), JustificationValues.Left, false));
+                        textCell.Append(SetSimpleParagraphStyles(new Paragraph(new Run(new Text($"Подразделение: {employee.Jobs[0].Subunit}"))), JustificationValues.Left, false));
+                        textCell.Append(SetSimpleParagraphStyles(new Paragraph(new Run(new Text($"Последняя болезнь: {employee.Diseases[0].Name}"))), JustificationValues.Left, false));
+                        textCell.Append(SetSimpleParagraphStyles(new Paragraph(new Run(new Text($"Семейное положение: {employee.FamilyStatus}"))), JustificationValues.Left, false));
+                        textCell.Append(SetSimpleParagraphStyles(new Paragraph(new Run(new Text($"Образование: {employee.Education}"))), JustificationValues.Left, false));
+                        textCell.Append(SetSimpleParagraphStyles(new Paragraph(new Run(new Text($"Почта: {employee.MailAdress}"))), JustificationValues.Left, false));
+                        //textCell.Append(paragraphProperties);
                         tableRow.Append(textCell);
 
                         table.Append(tableRow);
@@ -132,15 +138,15 @@ namespace HealthPassport.Services
                         mainPart.Document.Save();
                     }
                 }
-            }
-            catch (InvalidOperationException)
-            {
-                MessageBox.Show("Файл открыт в другой программе.", "Открытие невозможно", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Неизвестная ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            //}
+            //catch (InvalidOperationException)
+            //{
+            //    MessageBox.Show("Файл открыт в другой программе.", "Открытие невозможно", MessageBoxButton.OK, MessageBoxImage.Error);
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show($"Неизвестная ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            //}
         }
 
         public void exportEmployeeJobs(Employee_ViewModel employee)
@@ -190,7 +196,7 @@ namespace HealthPassport.Services
 
             if (!isSpacingBetweenLines) // Если НЕ нужно межстрочное расстояние
             {
-                paragraphProperties.Append(new SpacingBetweenLines() { Before = "0", After = "0" }); // Убираем интервал после абзаца
+                paragraphProperties.Append(new SpacingBetweenLines() { After = "-5" }); // Убираем интервал после абзаца
             }
 
             paragraph.Append(paragraphProperties);
@@ -209,7 +215,7 @@ namespace HealthPassport.Services
 
             var element = new Drawing(
                 new DW.Inline(
-                    new DW.Extent { Cx = 1218000L, Cy = 1256300L }, //в EMUs
+                    new DW.Extent { Cx = 1806500L, Cy = 1752500L }, //в EMUs
                     new DW.EffectExtent { LeftEdge = 0L, TopEdge = 0L, RightEdge = 0L, BottomEdge = 0L },
                     new DW.DocProperties { Id = (UInt32Value)1U, Name = "Picture 1" },
                     new DW.NonVisualGraphicFrameDrawingProperties(new DocumentFormat.OpenXml.Drawing.GraphicFrameLocks { NoChangeAspect = true }),
@@ -244,6 +250,11 @@ namespace HealthPassport.Services
                 )
             );
             return element;
+        }
+
+        public void exportEmployeesListInfo(ObservableCollection<Employee_ViewModel> employees, string label)
+        {
+            throw new NotImplementedException();
         }
     }
 }

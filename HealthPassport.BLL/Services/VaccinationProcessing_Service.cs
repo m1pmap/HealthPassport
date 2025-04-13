@@ -9,26 +9,27 @@ using System.Threading.Tasks;
 
 namespace HealthPassport.BLL.Services
 {
-    public class VaccinationProcessing_Service : IVaccinationProcessing
+    public class VaccinationProcessing_Service : ICudProcessing<Vaccination>
     {
-        private readonly IVaccination _vaccinationRepository;
-        public VaccinationProcessing_Service(IVaccination vaccinationRepository) 
+        private readonly ICudRepository<Vaccination> _vaccinationRepository;
+        public VaccinationProcessing_Service(ICudRepository<Vaccination> vaccinationRepository) 
         {
             _vaccinationRepository = vaccinationRepository;
         }
-        public bool Add_Vaccination(Vaccination newVaccination)
+
+        public bool Add_Item(Vaccination entity)
         {
-            return _vaccinationRepository.Add_Vaccination(newVaccination);
+            return _vaccinationRepository.Add_Item(entity);
         }
 
-        public bool Delete_Vaccination(int id)
+        public bool Delete_Item(int id)
         {
-            return _vaccinationRepository.Delete_Vaccination(id);
+            return _vaccinationRepository.Delete_Item(id);
         }
 
-        public bool Update_Vaccination(Vaccination vaccination)
+        public bool Update_Item(Vaccination entity)
         {
-            return _vaccinationRepository.Update_Vaccination(vaccination);
+            return _vaccinationRepository.Update_Item(entity);
         }
     }
 }

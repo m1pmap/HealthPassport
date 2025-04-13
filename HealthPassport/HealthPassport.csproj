@@ -12,6 +12,10 @@
     <None Remove="Resources\images\add.png" />
     <None Remove="Resources\images\addCalc.png" />
     <None Remove="Resources\images\addDependency.png" />
+    <None Remove="Resources\images\addVaccination.png" />
+    <None Remove="Resources\images\arrowRight.png" />
+    <None Remove="Resources\images\arrowRightGray.png" />
+    <None Remove="Resources\images\arrowRightWithBorder.png" />
     <None Remove="Resources\images\arrow_left.png" />
     <None Remove="Resources\images\calc.png" />
     <None Remove="Resources\images\calcToExcel.png" />
@@ -58,6 +62,7 @@
     <PackageReference Include="Azure.Identity" Version="1.11.4" />
     <PackageReference Include="DocumentFormat.OpenXml" Version="3.2.0" />
     <PackageReference Include="EPPlus" Version="7.6.0" />
+    <PackageReference Include="LiveCharts.Wpf" Version="0.9.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.1">
       <PrivateAssets>all</PrivateAssets>
@@ -81,6 +86,9 @@
     <Resource Include="Resources\images\add.png" />
     <Resource Include="Resources\images\addCalc.png" />
     <Resource Include="Resources\images\addDependency.png" />
+    <Resource Include="Resources\images\addVaccination.png" />
+    <Resource Include="Resources\images\arrowRightGray.png" />
+    <Resource Include="Resources\images\arrowRightWithBorder.png" />
     <Resource Include="Resources\images\calcToExcel.png" />
     <Resource Include="Resources\images\calcToNewSheetExcel.png" />
     <Resource Include="Resources\images\chapter.png" />

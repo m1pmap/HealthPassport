@@ -52,7 +52,7 @@
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Background" Value="White"/>
             <Setter Property="FontSize" Value="17"/>
-            <Setter Property="FontFamily" Value="Arial Black"/>
+            <Setter Property="FontFamily" Value="Arial"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TextBox">
@@ -64,36 +64,15 @@
                             <ScrollViewer x:Name="PART_ContentHost"/>
                         </Border>
                         <ControlTemplate.Triggers>
-                            <!-- Изменение цвета при фокусе -->
+                             <!--Изменение цвета при фокусе--> 
                             <Trigger Property="IsFocused" Value="True">
-                                <Setter TargetName="border" Property="BorderBrush" Value="MediumSeaGreen"/>
+                                <Setter TargetName="border" Property="BorderBrush" Value="CornflowerBlue"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
-
-        <!--Стиль для кнопки с закруглёнными краями-->
-        <ControlTemplate TargetType="Button" x:Key="btTemplate">
-            <Border x:Name="border"
-                    CornerRadius="10" 
-                    Background="{TemplateBinding Background}">
-                <Grid 
-                    HorizontalAlignment="Center" 
-                    VerticalAlignment="Center">
-                    <ContentPresenter HorizontalAlignment="Center" 
-                              VerticalAlignment="Center" 
-                              Content="{TemplateBinding Content}" 
-                              ContentTemplate="{TemplateBinding ContentTemplate}"/>
-                </Grid>
-            </Border>
-            <ControlTemplate.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter TargetName="border" Property="Background" Value="LightBlue"/>
-                </Trigger>
-            </ControlTemplate.Triggers>
-        </ControlTemplate>
     </Window.Resources>
 
     <Grid Background="Transparent" >
@@ -101,21 +80,21 @@
             <TabItem Header="Вход" Margin="67,1,-68,-1">
                 <Border Background="White" CornerRadius="10" Margin="42,-4,42,-4" BorderThickness="1" BorderBrush="Gray" VerticalAlignment="Top">
                     <StackPanel Orientation="Vertical" Margin="10">
-                        <Label Content="Почта:" Foreground="Gray" FontSize="20" HorizontalAlignment="Center"/>
+                        <Label Content="Почта:" Foreground="Gray" FontFamily="Arial" FontSize="14" HorizontalAlignment="Left" Margin="5,0,0,-5"/>
                         <TextBox x:Name="SignInMail_textBox" Foreground="Gray" Width="315"/>
                         <StackPanel Orientation="Horizontal" Margin="5,5,5,0">
 
                             <Button Width="144" Margin="3,1" Content="ОТМЕНА" 
                                     Template="{StaticResource btTemplate}" 
                                     Foreground="White" 
-                                    Background="OrangeRed"
+                                    Background="#e94e64"
                                     Height="35" Click="Close_button_Click"
                                     FontSize="17"/>
 
                             <Button x:Name="SignIn_button" Width="156" Margin="3,1" Content="ВОЙТИ" 
                                     Template="{StaticResource btTemplate}" 
                                     Foreground="White" 
-                                    Background="MediumSeaGreen"
+                                    Background="DarkSeaGreen"
                                     HorizontalAlignment="Right"
                                     Height="35"
                                     FontSize="17" Click="SignIn_button_Click"/>
@@ -127,9 +106,9 @@
             <TabItem Header="Регистрация" Margin="0,1,-74,-1" HorizontalAlignment="Right" Width="198">
                 <Border Background="White" CornerRadius="10" Margin="42,-4,42,-4" BorderThickness="1" BorderBrush="Gray" VerticalAlignment="Top">
                     <StackPanel Orientation="Vertical" Margin="10">
-                        <StackPanel Orientation="Horizontal">
-                            <Label Content="Фамилия:" Foreground="Gray" FontSize="20" Margin="18,0,53,0" Width="122"/>
-                            <Label Content="Имя:" Foreground="Gray" FontSize="20" Margin="17,0,0,0"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,-5">
+                            <Label Content="Фамилия:" Foreground="Gray" FontSize="14" FontFamily="Arial" Margin="5,0,42,0" Width="122"/>
+                            <Label Content="Имя:" Foreground="Gray" FontSize="14" FontFamily="Arial" Margin="0,0,0,0"/>
                         </StackPanel>
 
                         <StackPanel Orientation="Horizontal">
@@ -137,39 +116,38 @@
                             <TextBox x:Name="Name_textBox" Foreground="Gray" Width="152"/>
                         </StackPanel>
 
-                        <Label Content="Очество:" Foreground="Gray" FontSize="20" HorizontalAlignment="Center"/>
+                        <Label Content="Очество:" Foreground="Gray" FontFamily="Arial" FontSize="14" HorizontalAlignment="Left" Margin="5,0,0,-5"/>
                         <TextBox x:Name="SecondName_textBox" Foreground="Gray" Width="315"/>
 
-                        <Label Content="Должность:" Foreground="Gray" FontSize="20" HorizontalAlignment="Center"/>
+                        <Label Content="Должность:" Foreground="Gray" FontFamily="Arial" FontSize="14" HorizontalAlignment="Left" Margin="5,0,0,-5"/>
                         <Border CornerRadius="10" BorderThickness="1.7" BorderBrush="Gray" Margin="3,0">
-                            <ComboBox x:Name="Job_comboBox" IsEditable="True" Margin="5,3" BorderThickness="0" Foreground="Gray" FontSize="17" DisplayMemberPath="JobName"/>
+                            <ComboBox x:Name="Job_comboBox" IsEditable="True" FontFamily="Arial" Margin="5,3" BorderThickness="0" Foreground="Gray" FontSize="17" DisplayMemberPath="JobName"/>
                         </Border>
 
-                        <Label Content="Подразделение:" Foreground="Gray" FontSize="20" HorizontalAlignment="Center"/>
+                        <Label Content="Подразделение:" Foreground="Gray" FontFamily="Arial" FontSize="14" HorizontalAlignment="Left" Margin="5,0,0,-5"/>
                         <Border CornerRadius="10" BorderThickness="1.7" BorderBrush="Gray" Margin="3,0">
-                            <ComboBox x:Name="Subunit_comboBox" IsEditable="True" Margin="5,3" BorderThickness="0" Foreground="Gray" FontSize="17" DisplayMemberPath="SubunitName"/>
+                            <ComboBox x:Name="Subunit_comboBox" IsEditable="True" Margin="5,3" BorderThickness="0" FontFamily="Arial" Foreground="Gray" FontSize="17" DisplayMemberPath="SubunitName"/>
                         </Border>
-                        <!--<TextBox x:Name="Job_textBox" Foreground="Gray" Width="315"/>-->
 
-                        <Label Content="Дата рождения:" Foreground="Gray" FontSize="20" HorizontalAlignment="Center"/>
+                        <Label Content="Дата рождения:" Foreground="Gray" FontFamily="Arial" FontSize="14" HorizontalAlignment="Left" Margin="5,0,0,-5"/>
                         <Border BorderBrush="Gray" BorderThickness="1.7" CornerRadius="10" Height="35.55">
-                            <DatePicker x:Name="Birthday_datePicker" SelectedDate="2005-08-05" SelectedDateFormat="Short" Foreground="Gray" Width="310" FontSize="17" VerticalAlignment="Center" Height="18" Padding="5,0,0,0" BorderThickness="0"></DatePicker>
+                            <DatePicker x:Name="Birthday_datePicker" SelectedDate="2005-08-05" SelectedDateFormat="Short" FontFamily="Arial" Foreground="Gray" Width="310" FontSize="17" VerticalAlignment="Center" Height="18" Padding="5,0,0,0" BorderThickness="0"></DatePicker>
                         </Border>
-                        
-                        <Label Content="Почта:" Foreground="Gray" FontSize="20" HorizontalAlignment="Center"/>
+
+                        <Label Content="Почта:" Foreground="Gray" FontFamily="Arial" FontSize="14" HorizontalAlignment="Left" Margin="5,0,0,-5"/>
                         <TextBox x:Name="SignUpMail_textBox" Foreground="Gray" Width="315"/>
 
-                        <Button x:Name="SignUp_button" Width="276" Content="ЗАРЕГЕСТРИРОВАТЬСЯ" Margin="7" 
+                        <Button x:Name="SignUp_button" Width="275" Content="ЗАРЕГЕСТРИРОВАТЬСЯ" Margin="7" 
                                  Template="{StaticResource btTemplate}" 
                                  Foreground="White" 
-                                 Background="MediumSeaGreen"
+                                 Background="DarkSeaGreen"
                                  Height="35"
                                  FontSize="17" Click="SignUp_button_Click"/>
 
                         <Button Width="127" Margin="3,1" Content="ОТМЕНА" 
                                  Template="{StaticResource btTemplate}" 
                                  Foreground="White" 
-                                 Background="OrangeRed"
+                                 Background="#e94e64"
                                  Height="35" Click="Close_button_Click"
                                  FontSize="17"/>
                     </StackPanel>

@@ -25,7 +25,7 @@ namespace HealthPassport.Models
                 }
             }
         }
-        public string _FIO { get; set; } = string.Empty;
+        private string _FIO { get; set; } = string.Empty;
         public string FIO
         {
             get => _FIO;
@@ -39,7 +39,7 @@ namespace HealthPassport.Models
             }
         }
 
-        public string _Job { get; set; } = string.Empty;
+        private string _Job { get; set; } = string.Empty;
         public string Job
         {
             get => _Job;
@@ -53,7 +53,7 @@ namespace HealthPassport.Models
             }
         }
 
-        public string _Education { get; set; } = string.Empty;
+        private string _Education { get; set; } = string.Empty;
         public string Education
         {
             get => _Education;
@@ -67,7 +67,7 @@ namespace HealthPassport.Models
             }
         }
 
-        public string _Birthday { get; set; } = string.Empty;
+        private string _Birthday { get; set; } = string.Empty;
         public string Birthday
         {
             get => _Birthday;
@@ -81,7 +81,7 @@ namespace HealthPassport.Models
             }
         }
 
-        public string _FamilyStatus { get; set; } = string.Empty;
+        private string _FamilyStatus { get; set; } = string.Empty;
         public string FamilyStatus
         {
             get => _FamilyStatus;
@@ -95,7 +95,7 @@ namespace HealthPassport.Models
             }
         }
 
-        public string _MailAdress { get; set; } = string.Empty;
+        private string _MailAdress { get; set; } = string.Empty;
         public string MailAdress
         {
             get => _MailAdress;
@@ -108,7 +108,7 @@ namespace HealthPassport.Models
                 }
             }
         }
-        public byte[] _Photo { get; set; } = null;
+        private byte[] _Photo { get; set; } = null;
 
         public byte[] Photo
         {
@@ -119,6 +119,20 @@ namespace HealthPassport.Models
                 {
                     _Photo = value;
                     OnPropertyChanged(nameof(Photo));
+                }
+            }
+        }
+
+        private bool _isCurrentUser { get; set; } = false;
+        public bool IsCurrentUser
+        {
+            get => _isCurrentUser;
+            set
+            {
+                if (_isCurrentUser != value)
+                {
+                    _isCurrentUser = value;
+                    OnPropertyChanged(nameof(IsCurrentUser));
                 }
             }
         }
@@ -154,11 +168,14 @@ namespace HealthPassport.Models
                 NewEmployeeVM.Diseases.Add((Disease_ViewModel)disease);
             }
 
+            NewEmployeeVM.Diseases.Reverse();
+
             //Подгрузка прививок
             foreach (var vaccination in employee.Vaccinations)
             {
                 NewEmployeeVM.Vaccinations.Add((Vaccination_ViewModel)vaccination);
             }
+            NewEmployeeVM.Vaccinations.Reverse();
 
             //Подгрузка семейных статусов
             if (employee.FamilyStatuses.Count > 0)
@@ -167,7 +184,10 @@ namespace HealthPassport.Models
                 {
                     NewEmployeeVM.FamilyStatuses.Add((FamilyStatus_ViewModel)familyStatus);
                 }
-                FamilyStatus lastFamilyStatus = employee.FamilyStatuses.LastOrDefault();
+
+                NewEmployeeVM.FamilyStatuses.Reverse();
+
+                FamilyStatus lastFamilyStatus = employee.FamilyStatuses.FirstOrDefault();
                 if(lastFamilyStatus.StartFamilyDate > lastFamilyStatus.EndFamilyDate)
                 {
                     NewEmployeeVM.FamilyStatus = "Женат";
@@ -187,6 +207,8 @@ namespace HealthPassport.Models
             {
                 NewEmployeeVM.AntropologicalResearches.Add((AntropologicalResearch_ViewModel)antropologicakResearch);
             }
+            NewEmployeeVM.AntropologicalResearches.Reverse();
+
 
             //Подгрузка образований
             if (employee.Educations.Count > 0)
@@ -195,7 +217,8 @@ namespace HealthPassport.Models
                 {
                     NewEmployeeVM.Educations.Add((Education_ViewModel)education);
                 }
-                NewEmployeeVM.Education = NewEmployeeVM.Educations[NewEmployeeVM.Educations.Count - 1].EducationType;
+                NewEmployeeVM.Education.Reverse();
+                NewEmployeeVM.Education = NewEmployeeVM.Educations[0].EducationType;
             }
             else
             {
@@ -209,7 +232,8 @@ namespace HealthPassport.Models
                 {
                     NewEmployeeVM.Jobs.Add((Job_ViewModel)job);
                 }
-                NewEmployeeVM.Job = NewEmployeeVM.Jobs[NewEmployeeVM.Jobs.Count - 1].JobName;
+                NewEmployeeVM.Job.Reverse();
+                NewEmployeeVM.Job = NewEmployeeVM.Jobs[0].JobName;
             }
 
             return NewEmployeeVM;

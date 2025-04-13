@@ -5,5 +5,287 @@
     <Application.Resources>
         <local:ByteArrayToImageSourceConverter_Service x:Key="ByteArrayToImageSourceConverter"/>
         <!--<local:NullToEmptyStringConverter x:Key="NullToEmptyStringConverter" />-->
+
+        <ControlTemplate TargetType="Button" x:Key="btTemplate">
+            <Border x:Name="border"
+    CornerRadius="10"
+    Background="{TemplateBinding Background}">
+                <StackPanel Orientation="Horizontal" 
+            HorizontalAlignment="Center" 
+            VerticalAlignment="Center">
+                    <ContentPresenter HorizontalAlignment="Center" 
+                      VerticalAlignment="Center" 
+                      Content="{TemplateBinding Content}" 
+                      ContentTemplate="{TemplateBinding ContentTemplate}"/>
+                </StackPanel>
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="border" Property="Background" Value="LightBlue"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+
+        <Style TargetType="TextBox">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="FontFamily" Value="Arial Black"/>
+            <Setter Property="Foreground" Value="Gray"/>
+            <Setter Property="BorderBrush" Value="Gray"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border x:Name="border"
+                                 Background="White"
+                                 BorderBrush="{TemplateBinding BorderBrush}"
+                                 BorderThickness="1.7"
+                                 CornerRadius="4">
+                            <ScrollViewer x:Name="PART_ContentHost"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <!-- Изменение цвета при фокусе -->
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="CornFlowerBlue"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!--Стиль для dataGrid-->
+        <Style TargetType="DataGrid">
+            <!-- Make the border and grid lines a little less imposing -->
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="HorizontalGridLinesBrush" Value="Transparent" />
+            <Setter Property="VerticalGridLinesBrush" Value="Transparent" />
+
+            <Setter Property="RowStyle">
+                <Setter.Value>
+                    <Style TargetType="DataGridRow">
+                        <!-- Обычная высота -->
+                        <Setter Property="MinHeight" Value="20"/>
+                        <Setter Property="Background" Value="White"/>
+
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="DataGridRow">
+                                    <Border x:Name="Border"
+                                            Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="2"
+                                            CornerRadius="6"
+                                            Padding="0,2,4,2">
+
+                                        <Grid>
+                                            <DataGridCellsPresenter/>
+                                            <DataGridDetailsPresenter Visibility="{TemplateBinding DetailsVisibility}"/>
+                                        </Grid>
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="BorderBrush" Value="LightGray"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="BorderThickness" Value="1"/>
+                            </Trigger>
+
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="BorderBrush" Value="Gray"/>
+                                <Setter Property="BorderThickness" Value="1"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="Foreground" Value="Gray"/>
+                                <!-- Чтобы текст был виден на синем фоне -->
+                            </Trigger>
+                        </Style.Triggers>
+
+                        
+                    </Style>
+                </Setter.Value>
+            </Setter>
+
+
+            <Setter Property="CellStyle">
+                <Setter.Value>
+                    <Style TargetType="DataGridCell">
+                        <Style.Triggers>
+                            <!--Highlight selected rows-->
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="Foreground" Value="Gray"/>
+                                <Setter Property="BorderThickness" Value="0"/>
+                            </Trigger>
+                            <!--<Trigger Property="IsFocused" Value="True">
+                                <Setter Property="Background" Value="#FAFAFA"/>
+                                <Setter Property="Foreground" Value="Gray" />
+                            </Trigger>-->
+                        </Style.Triggers>
+                        <!-- Add some padding around the contents of a cell -->
+                        <Setter Property="Tag" Value="{Binding IsEditing, RelativeSource={RelativeSource Self}}"/>
+                        <Setter Property="Padding" Value="4,3,4,3" />
+                        <Setter Property="BorderBrush" Value="Transparent"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="DataGridCell">
+                                    <Border Padding="{TemplateBinding Padding}" 
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            Background="{TemplateBinding Background}">
+                                        <ContentPresenter />
+                                    </Border>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Property="FocusVisualStyle">
+                            <Setter.Value>
+                                <Style TargetType="Control">
+                                    <Setter Property="BorderBrush" Value="Transparent" />
+                                </Style>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+
+            <Setter Property="ColumnHeaderStyle">
+                <Setter.Value>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="Foreground" Value="DimGray"/>
+                        <Setter Property="FontFamily" Value="Arial Black"/>
+                        <Setter Property="FontSize" Value="12"/>
+                        <Setter Property="Padding" Value="5,10"/>
+                        <Setter Property="BorderThickness" Value="0,2,0,2"/>
+                        <Setter Property="BorderBrush" Value="LightGray"/>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+        <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="ToggleButton">
+            <Border x:Name="Border" CornerRadius="4"
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="1.7"
+                    Padding="8,4">
+                <Grid>
+                    <Path x:Name="Arrow"
+                          HorizontalAlignment="Right"
+                          Margin="0,0,4,0"
+                          VerticalAlignment="Center"
+                          Data="M 0 0 L 4 4 L 8 0 Z"
+                          Fill="Gray"/>
+                </Grid>
+            </Border>
+        </ControlTemplate>
+
+        <Style x:Key="RoundedComboBox" TargetType="ComboBox">
+            <Setter Property="FontFamily" Value="Arial"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="2"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="Gray"/>
+            <Setter Property="BorderThickness" Value="1.7"/>
+            <Setter Property="Height" Value="23"/>
+            <Setter Property="IsEditable" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <ToggleButton
+                                    Name="ToggleButton"
+                                    Template="{StaticResource ComboBoxToggleButton}"
+                                    Grid.Column="2"
+                                    Focusable="false"
+                                    IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                    ClickMode="Press"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="0"/>
+
+                            <ContentPresenter
+                                    Name="ContentSite"
+                                    IsHitTestVisible="False"
+                                    Content="{TemplateBinding SelectionBoxItem}"
+                                    ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                    ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                    Margin="8,4,28,4"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Left"/>
+
+                            <Popup
+                                    Name="Popup"
+                                    Placement="Bottom"
+                                    IsOpen="{TemplateBinding IsDropDownOpen}"
+                                    AllowsTransparency="True"
+                                    Focusable="False"
+                                    PopupAnimation="Slide">
+                                <Grid
+                                    Name="DropDown"
+                                    SnapsToDevicePixels="True"
+                                    MinWidth="{TemplateBinding ActualWidth}"
+                                    MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                    <Border
+                                        Background="White"
+                                        BorderBrush="Gray"
+                                        BorderThickness="1.7"
+                                        CornerRadius="4">
+                                        <ScrollViewer Margin="4" SnapsToDevicePixels="True">
+                                            <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained"/>
+                                        </ScrollViewer>
+                                    </Border>
+                                </Grid>
+                            </Popup>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter Property="BorderBrush" Value="CornflowerBlue"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="TabItem">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border Name="Border" CornerRadius="7" BorderThickness="1.5" BorderBrush="Gray" Margin="1">
+                            <ContentPresenter x:Name="ContentSite"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Center"
+                                       ContentSource="Header"
+                                       Margin="2,7,2,7"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <!-- Состояние для выбранного TabItem -->
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="White"/>
+                                <Setter Property="Foreground" Value="Gray"/>
+                                <Setter Property="FontFamily" Value="Arial Black"/>
+                            </Trigger>
+
+                            <!-- Состояние для невыбранного TabItem -->
+                            <Trigger Property="IsSelected" Value="False">
+                                <Setter TargetName="Border" Property="Background" Value="#a3a3a4"/>
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="FontFamily" Value="Arial Black"/>
+                            </Trigger>
+
+                            <!-- Состояние при наведении на TabItem -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="White"/>
+                                <Setter Property="Foreground" Value="Gray"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Application.Resources>
 </Application>

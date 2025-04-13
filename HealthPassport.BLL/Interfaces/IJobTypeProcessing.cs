@@ -7,10 +7,7 @@ using System.Threading.Tasks;
 
 namespace HealthPassport.BLL.Interfaces
 {
-    public interface IVaccinationProcessing
+    public interface IJobTypeProcessing : ICudProcessing<JobType>, IGetProcessing<JobType>
     {
-        bool Add_Vaccination(Vaccination vaccination);
-        bool Delete_Vaccination(int id);
-        bool Update_Vaccination(Vaccination vaccination);
     }
 }

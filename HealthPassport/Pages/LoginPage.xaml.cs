@@ -25,7 +25,8 @@ namespace HealthPassport.Pages
         private readonly IFileWorker _fileWorker;
         private readonly IMailSender _mailSender;
         private readonly IShaderEffects _shaderEffectsService;
-        private readonly IJobProcessing _jobProcessingService;
+        private readonly IJobTypeProcessing _jobTypeProcessingService;
+        private readonly ISubunitProcessing _subunitProcessingService;
 
 
         bool isFormClosingNow = false;
@@ -36,7 +37,8 @@ namespace HealthPassport.Pages
             IEmployeeProcessing employeeProcessingService,
             IFileWorker fileWorker,
             IShaderEffects shaderEffectsService,
-            IJobProcessing jobProcessingService)
+            IJobTypeProcessing jobTypeProcessingService,
+            ISubunitProcessing subunitProcessingService)
         {
             InitializeComponent();
 
@@ -47,12 +49,13 @@ namespace HealthPassport.Pages
             _imageSourceConverter = imageSourceConverter;
             _fileWorker = fileWorker;
             _shaderEffectsService = shaderEffectsService;
-            _jobProcessingService = jobProcessingService;
+            _jobTypeProcessingService = jobTypeProcessingService;
+            _subunitProcessingService = subunitProcessingService;
 
             //Функционал
 
-            Job_comboBox.ItemsSource = _jobProcessingService.GetAllJobTypes();
-            Subunit_comboBox.ItemsSource = _jobProcessingService.GetAllSubunits();
+            Job_comboBox.ItemsSource = _jobTypeProcessingService.Get_AllItems();
+            Subunit_comboBox.ItemsSource = _subunitProcessingService.Get_AllItems();
 
             if (File.Exists("settings.json"))
             {
@@ -121,8 +124,8 @@ namespace HealthPassport.Pages
 
                                     Job employeeJob = new Job
                                     {
-                                         SubunitId = _jobProcessingService.Get_SubunitIdByName(Subunit_comboBox.Text),
-                                         JobTypeId = _jobProcessingService.Get_JobTypeIdByName(Job_comboBox.Text),
+                                         SubunitId = _subunitProcessingService.Get_IdByMainParam(Subunit_comboBox.Text),
+                                         JobTypeId = _jobTypeProcessingService.Get_IdByMainParam(Job_comboBox.Text),
                                          StartWorkingDate = DateTime.Now,
                                          EndWorkingDate = DateTime.MinValue,
                                          WorkingRate = 805

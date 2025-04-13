@@ -1,4 +1,5 @@
-﻿using HealthPassport.DAL.Models;
+﻿using HealthPassport.DAL.Interfaces;
+using HealthPassport.DAL.Models;
 using HealthPassport.Interfaces;
 using HealthPassport.Models;
 using Microsoft.Win32;
@@ -6,6 +7,7 @@ using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -19,7 +21,7 @@ using System.Windows.Media.Media3D;
 
 namespace HealthPassport.Services
 {
-    public class ExcelWorker_Service : IExcelWorker
+    public class ExcelWorker_Service : IExportWorker
     {
         private readonly ByteArrayToImageSourceConverter_Service _imageConverter;
         public ExcelWorker_Service(ByteArrayToImageSourceConverter_Service imageConverter)
@@ -93,7 +95,7 @@ namespace HealthPassport.Services
                                 worksheet.Cells[i, 3].Value = "Подразделение:";
                                 if (employee.Jobs.Count > 0)
                                 {
-                                    worksheet.Cells[i, 4].Value = employee.Jobs[employee.Jobs.Count - 1].Subunit;
+                                    worksheet.Cells[i, 4].Value = employee.Jobs[0].Subunit;
                                 }
                                 else
                                 {
@@ -106,7 +108,7 @@ namespace HealthPassport.Services
                                 worksheet.Cells[i, 3].Value = "Последняя болезнь:";
                                 if (employee.Diseases.Count > 0)
                                 {
-                                    worksheet.Cells[i, 4].Value = employee.Diseases[employee.Diseases.Count - 1].Name;
+                                    worksheet.Cells[i, 4].Value = employee.Diseases[0].Name;
                                 }
                                 else
                                 {
@@ -230,6 +232,126 @@ namespace HealthPassport.Services
                 MessageBox.Show("Файл открыт в другой программе.", "Открытие невозможно", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             catch(Exception ex)
+            {
+                MessageBox.Show($"Неизвестная ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        public void exportEmployeesListInfo(ObservableCollection<Employee_ViewModel> employees, string label)
+        {
+            try
+            {
+                ExcelPackage.LicenseContext = LicenseContext.Commercial;
+
+                var package = new ExcelPackage(); //Создание нового документа
+                var worksheet = package.Workbook.Worksheets.Add(label);
+
+                ExcelRange diseasesStartRange = worksheet.Cells[1, 1, 1, 7];
+                SetRangeStyles(diseasesStartRange, System.Drawing.Color.MediumSeaGreen, System.Drawing.Color.White, System.Drawing.Color.MediumSeaGreen, fontFamily: "Arial Black", isMerge: true);
+                worksheet.Cells[1, 1].Value = label;
+
+                ExcelRange diseasesHeaderRange = worksheet.Cells[2, 1, 2, 7];
+                SetRangeStyles(diseasesHeaderRange, System.Drawing.Color.White, System.Drawing.Color.Black, System.Drawing.Color.Gray);
+
+                worksheet.Cells[2, 1].Value = "№";
+                worksheet.Cells[2, 2].Value = "ФИО";
+                worksheet.Cells[2, 3].Value = "Должность";
+                worksheet.Cells[2, 4].Value = "Образование";
+                worksheet.Cells[2, 5].Value = "Дата рождения";
+                worksheet.Cells[2, 6].Value = "Семейное положение";
+                worksheet.Cells[2, 7].Value = "Фото";
+
+
+                ExcelRange employeesRange = worksheet.Cells[3, 1, 3 + employees.Count - 1, 7];
+                SetRangeStyles(employeesRange, System.Drawing.Color.White, System.Drawing.Color.Black, System.Drawing.Color.Gray, hAligment: ExcelHorizontalAlignment.Center);
+
+                for (int i = 3; i < 3 + employees.Count; i++)
+                {
+                    worksheet.Cells[i, 1].Value = i - 2;
+                    worksheet.Cells[i, 2].Value = employees[i - 3].FIO;
+                    worksheet.Cells[i, 3].Value = employees[i - 3].Job;
+                    worksheet.Cells[i, 4].Value = employees[i - 3].Education;
+                    worksheet.Cells[i, 5].Value = employees[i - 3].Birthday;
+                    worksheet.Cells[i, 6].Value = employees[i - 3].FamilyStatus;
+
+                    //ExcelRange photoRange = worksheet.Cells[i, 7];
+                    //SetRangeStyles(photoRange, System.Drawing.Color.Transparent, System.Drawing.Color.Black, System.Drawing.Color.Gray);
+
+
+                    //Конвертация картинки в Excel с заданной шириной и высотой
+                    int width = 50;
+                    int height = width / 2;
+
+                    BitmapImage bitmapImage = (BitmapImage)_imageConverter.Convert(employees[i - 3].Photo, typeof(BitmapImage), null, CultureInfo.CurrentCulture);
+                    int originalWidth = bitmapImage.PixelWidth; //Оригинальная ширина картинки
+                    int originalHeight = bitmapImage.PixelHeight; //Оригинальная высота картинки
+
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        int excelImageWidth = originalWidth;
+                        int excelImageHeight = originalHeight;
+
+                        var encoder = new PngBitmapEncoder();
+                        encoder.Frames.Add(BitmapFrame.Create(bitmapImage));
+                        encoder.Save(memoryStream);
+
+                        memoryStream.Position = 0;
+                        var excelImage = worksheet.Drawings.AddPicture(i.ToString(), memoryStream);
+
+                        if (excelImageWidth > width) //Если оригинальный размер больше необходимого
+                        {
+                            excelImageWidth = width;
+                            excelImageHeight = (int)((double)width / originalWidth * originalHeight);
+                        }
+
+                        if (excelImageHeight > height)
+                        {
+                            excelImageHeight = height;
+                            excelImageWidth = (int)((double)excelImageHeight / originalHeight * originalWidth);
+                        }
+
+                        excelImage.SetPosition(i - 1, 5, 6, (width - excelImageWidth) / 2);
+
+                        worksheet.Column(7).Width = width / 7;
+                        worksheet.Rows[i].Height = (height + 10) / 1.33;
+
+                        excelImage.SetSize(excelImageWidth, excelImageHeight);
+                    }
+                }
+
+                //Дата формирования
+                ExcelRange creatingDateRange = worksheet.Cells[employees.Count + 4, 1, employees.Count + 4, 7];
+                SetRangeStyles(creatingDateRange, System.Drawing.Color.White, System.Drawing.Color.Black, System.Drawing.Color.Gray, isMerge: true);
+                worksheet.Cells[employees.Count + 4, 1].Value = $"Сформировано: {DateTime.Now.ToString("dd.MM.yyyy")}";
+
+                //Установка ширины столбцов 
+                worksheet.Column(1).Width = 4.29;
+                worksheet.Column(2).Width = 40.29;
+                worksheet.Column(3).Width = 25.71;
+                worksheet.Column(4).Width = 25.71;
+                worksheet.Column(5).Width = 24.71;
+                worksheet.Column(6).Width = 24.71;
+                //worksheet.Column(7).Width = 24.71;
+
+                SaveFileDialog saveFileDialog = new SaveFileDialog
+                {
+                    Filter = "Excel Files (*.xlsx)|*.xlsx",
+                    Title = "Сохранить Excel документ"
+                };
+
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    string filePath = saveFileDialog.FileName;
+                    worksheet.Protection.IsProtected = false;
+                    worksheet.Protection.AllowSelectLockedCells = false;
+                    package.SaveAs(new FileInfo(filePath));
+                }
+        }
+            catch (InvalidOperationException)
+            {
+                MessageBox.Show("Файл открыт в другой программе.", "Открытие невозможно", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (Exception ex)
             {
                 MessageBox.Show($"Неизвестная ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }

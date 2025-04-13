@@ -8,18 +8,19 @@ using System.Threading.Tasks;
 
 namespace HealthPassport.DAL.Repositories
 {
-    public class Job_Repository : IJob
+    public class Job_Repository : ICudRepository<Job>
     {
         private readonly ApplicationDbContext _db;
         public Job_Repository(ApplicationDbContext db)
         {
             _db = db;
         }
-        public bool Add_Job(Job newJob)
+
+        public bool Add_Item(Job entity)
         {
             try
             {
-                _db.Jobs.Add(newJob);
+                _db.Jobs.Add(entity);
                 _db.SaveChanges();
 
                 return true;
@@ -30,7 +31,7 @@ namespace HealthPassport.DAL.Repositories
             }
         }
 
-        public bool Delete_Job(int id)
+        public bool Delete_Item(int id)
         {
             try
             {
@@ -50,19 +51,28 @@ namespace HealthPassport.DAL.Repositories
             }
         }
 
-        public bool Update_Job(Job newJob)
+        public bool Update_Item(Job entity)
         {
             try
             {
-                Job? updateJob = _db.Jobs.FirstOrDefault(j => j.JobId == newJob.JobId);
+                Job? updateJob = _db.Jobs.FirstOrDefault(j => j.JobId == entity.JobId);
 
                 if (updateJob != null)
                 {
-                    updateJob.SubunitId = newJob.SubunitId;
-                    updateJob.WorkingRate = newJob.WorkingRate;
-                    updateJob.StartWorkingDate = newJob.StartWorkingDate;
-                    updateJob.EndWorkingDate = newJob.EndWorkingDate;
-                    updateJob.JobTypeId = newJob.JobTypeId;
+                    if(updateJob.SubunitId != entity.SubunitId)
+                        updateJob.SubunitId = entity.SubunitId;
+
+                    if(updateJob.WorkingRate != entity.WorkingRate)
+                        updateJob.WorkingRate = entity.WorkingRate;
+
+                    if(updateJob.StartWorkingDate != entity.StartWorkingDate)
+                        updateJob.StartWorkingDate = entity.StartWorkingDate;
+
+                    if(updateJob.EndWorkingDate != entity.EndWorkingDate)
+                        updateJob.EndWorkingDate = entity.EndWorkingDate;
+
+                    if(updateJob.JobTypeId != entity.JobTypeId)
+                        updateJob.JobTypeId = entity.JobTypeId;
                     _db.SaveChanges();
                 }
                 return true;

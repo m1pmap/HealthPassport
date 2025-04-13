@@ -129,7 +129,7 @@
                         Foreground="White"
                         FontSize="12"
                         Content="ОТМЕНА"
-                        Background="OrangeRed"  
+                        Background="#e94e64"  
                         Margin="5,3"
                         Click="cancel_button_Click" Width="91"/>
             </StackPanel>

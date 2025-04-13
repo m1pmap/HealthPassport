@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace HealthPassport.BLL.Interfaces
 {
-    public interface IDiseaseProcessing
+    public interface IDiseaseProcessing : ICudProcessing<Disease>
     {
-        bool Add_Disease(Disease newDisease);
-        bool Delete_Disease(int id);
-        bool Update_Disease(Disease newDisease);
+        public List<Disease> Get_AllItems();
     }
 }

@@ -10,63 +10,26 @@ using System.Threading.Tasks;
 
 namespace HealthPassport.BLL.Services
 {
-    public class JobProcessing_Service : IJobProcessing
+    public class JobProcessing_Service : ICudProcessing<Job>
     {
-        private readonly IJob _jobRepository;
-        private readonly IJobType _jobTypeRepository;
-        private readonly ISubunit _subunitRepository;
-        public JobProcessing_Service(IJob jobRepository,
-            IJobType jobTypeRepository,
-            ISubunit subunitRepository)
+        private readonly ICudRepository<Job> _jobRepository;
+        public JobProcessing_Service(ICudRepository<Job> jobRepository)
         {
             _jobRepository = jobRepository;
-            _jobTypeRepository = jobTypeRepository;
-            _subunitRepository = subunitRepository;
-        }
-        public bool Add_Job(Job newJob)
-        {
-            return _jobRepository.Add_Job(newJob);
         }
 
-        public bool Delete_Job(int id)
+        public bool Add_Item(Job entity)
         {
-            return _jobRepository.Delete_Job(id);
+            return _jobRepository.Add_Item(entity);
         }
 
-        public List<JobType> GetAllJobTypes()
+        public bool Delete_Item(int id)
         {
-            return _jobTypeRepository.GetAllJobTypes();
+            return _jobRepository.Delete_Item(id);
         }
-
-        public List<Subunit> GetAllSubunits()
+        public bool Update_Item(Job entity)
         {
-            return _subunitRepository.GetAllSubunits();
-        }
-
-        public string Get_JobNameById(int id)
-        {
-            return _jobTypeRepository.Get_JobNameById(id);
-        }
-
-        public int Get_JobTypeIdByName(string jobName)
-        {
-            return _jobTypeRepository.Get_JobTypeIdByName(jobName);
-
-        }
-
-        public int Get_SubunitIdByName(string subunitName)
-        {
-            return _subunitRepository.Get_SubunitIdByName(subunitName);
-        }
-
-        public string Get_SubunitNameById(int id)
-        {
-            return _subunitRepository.Get_SubunitNameById(id);
-        }
-
-        public bool Update_Job(Job newJob)
-        {
-            return _jobRepository.Update_Job(newJob);
+            return _jobRepository.Update_Item(entity);
         }
     }
 }

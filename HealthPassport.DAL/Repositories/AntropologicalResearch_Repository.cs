@@ -8,18 +8,19 @@ using System.Threading.Tasks;
 
 namespace HealthPassport.DAL.Repositories
 {
-    public class AntropologicalResearch_Repository : IAntropologicalResearch
+    public class AntropologicalResearch_Repository : ICudRepository<AntropologicalResearch>
     {
         private readonly ApplicationDbContext _db;
         public AntropologicalResearch_Repository(ApplicationDbContext db)
         {
             _db = db;
         }
-        public bool Add_AntropologicalResearch(AntropologicalResearch antropologicalResearch)
+
+        public bool Add_Item(AntropologicalResearch entity)
         {
             try
             {
-                _db.AntropologicalResearches.Add(antropologicalResearch);
+                _db.AntropologicalResearches.Add(entity);
                 _db.SaveChanges();
 
                 return true;
@@ -30,7 +31,7 @@ namespace HealthPassport.DAL.Repositories
             }
         }
 
-        public bool Delete_AntropologicalResearch(int id)
+        public bool Delete_Item(int id)
         {
             try
             {
@@ -50,17 +51,23 @@ namespace HealthPassport.DAL.Repositories
             }
         }
 
-        public bool Update_AntropologicalResearch(AntropologicalResearch antropologicalResearch)
+        public bool Update_Item(AntropologicalResearch entity)
         {
             try
             {
-                AntropologicalResearch updateAntropologicalResearch= _db.AntropologicalResearches.FirstOrDefault(ar => ar.AntropologicalResearchId== antropologicalResearch.AntropologicalResearchId);
+                AntropologicalResearch updateAntropologicalResearch = _db.AntropologicalResearches.FirstOrDefault(ar => ar.AntropologicalResearchId == entity.AntropologicalResearchId);
 
                 if (updateAntropologicalResearch != null)
                 {
-                    updateAntropologicalResearch.Weight = antropologicalResearch.Weight;
-                    updateAntropologicalResearch.Height = antropologicalResearch.Height;
-                    updateAntropologicalResearch.Date = antropologicalResearch.Date;
+
+                    if (updateAntropologicalResearch.Weight != entity.Weight)
+                        updateAntropologicalResearch.Weight = entity.Weight;
+
+                    if(updateAntropologicalResearch.Height != entity.Height)
+                        updateAntropologicalResearch.Height = entity.Height;
+
+                    if(updateAntropologicalResearch.Date != entity.Date)
+                        updateAntropologicalResearch.Date = entity.Date;
                     _db.SaveChanges();
                 }
                 return true;

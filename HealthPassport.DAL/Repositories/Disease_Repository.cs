@@ -16,11 +16,11 @@ namespace HealthPassport.DAL.Repositories
             _db = db;
         }
 
-        public bool Add_Disease(Disease disease)
+        public bool Add_Item(Disease entity)
         {
             try
             {
-                _db.Diseases.Add(disease);
+                _db.Diseases.Add(entity);
                 _db.SaveChanges();
 
                 return true;
@@ -31,7 +31,7 @@ namespace HealthPassport.DAL.Repositories
             }
         }
 
-        public bool Delete_Disease(int id)
+        public bool Delete_Item(int id)
         {
             try
             {
@@ -51,17 +51,27 @@ namespace HealthPassport.DAL.Repositories
             }
         }
 
-        public bool Update_Disease(Disease newDisease)
+        public List<Disease> Get_AllItems()
+        {
+            return _db.Diseases.ToList();
+        }
+
+        public bool Update_Item(Disease entity)
         {
             try
             {
-                Disease updateDisease = _db.Diseases.FirstOrDefault(e => e.DiseaseId == newDisease.DiseaseId);
+                Disease updateDisease = _db.Diseases.FirstOrDefault(e => e.DiseaseId == entity.DiseaseId);
 
                 if (updateDisease != null)
                 {
-                    updateDisease.Name = newDisease.Name;
-                    updateDisease.StardDiseaseDate = newDisease.StardDiseaseDate;
-                    updateDisease.EndDiseaseDate = newDisease.EndDiseaseDate;
+                    if(updateDisease.Name != entity.Name)
+                        updateDisease.Name = entity.Name;
+
+                    if(updateDisease.StardDiseaseDate != entity.StardDiseaseDate)
+                        updateDisease.StardDiseaseDate = entity.StardDiseaseDate;
+
+                    if(updateDisease.EndDiseaseDate != entity.EndDiseaseDate)
+                        updateDisease.EndDiseaseDate = entity.EndDiseaseDate;
                     _db.SaveChanges();
                 }
                 return true;

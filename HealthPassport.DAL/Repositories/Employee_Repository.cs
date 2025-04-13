@@ -14,71 +14,15 @@ namespace HealthPassport.DAL.Repositories
     {
         private readonly ApplicationDbContext _db;
 
+
         public Employee_Repository(ApplicationDbContext db) 
         {
             _db = db;
         }
 
-        public bool Add_Employee(Employee employee)
-        {
-            try
-            {
-                _db.Employees.Add(employee);
-                _db.SaveChanges();
-
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        public bool Delete_Employee(int id)
-        {
-            try
-            {
-                Employee? dbEmployee = _db.Employees.FirstOrDefault(e => e.EmployeeId == id);
-                if (dbEmployee != null)
-                {
-                    _db.Employees.Remove(dbEmployee);
-                    _db.SaveChanges();
-
-                    return true;
-                }
-                return false;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
         public List<Employee> Get_AllEmployees()
         {
             return _db.Employees.ToList();
-        }
-
-        public bool Update_Employee(Employee newEmployee)
-        {
-            try
-            {
-                var updateEmployee = _db.Employees.FirstOrDefault(e => e.EmployeeId == newEmployee.EmployeeId);
-
-                if (updateEmployee != null)
-                {
-                    updateEmployee.FIO = newEmployee.FIO;
-                    updateEmployee.Birthday = newEmployee.Birthday;
-                    updateEmployee.Photo = newEmployee.Photo;
-                    _db.SaveChanges();
-                }
-                return true;
-            }
-            catch (Exception ex)
-            {
-
-                return false; 
-            }
         }
 
         public Employee Connect_EmployeeInformation(Employee employee)
@@ -105,6 +49,94 @@ namespace HealthPassport.DAL.Repositories
             {
                 return employee;
             }
+        }
+
+        public bool Add_Item(Employee entity)
+        {
+            try
+            {
+                _db.Employees.Add(entity);
+                _db.SaveChanges();
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool Update_Item(Employee entity)
+        {
+            try
+            {
+                var updateEmployee = _db.Employees.FirstOrDefault(e => e.EmployeeId == entity.EmployeeId);
+
+                if (updateEmployee != null)
+                {
+                    if(updateEmployee.FIO != entity.FIO)
+                        updateEmployee.FIO = entity.FIO;
+
+                    if(updateEmployee.Birthday != entity.Birthday)
+                        updateEmployee.Birthday = entity.Birthday;
+
+                    if(updateEmployee.Photo != entity.Photo)
+                        updateEmployee.Photo = entity.Photo;
+
+                    if (updateEmployee.MailAdress != entity.MailAdress)
+                        updateEmployee.MailAdress = entity.MailAdress;
+                    _db.SaveChanges();
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+
+                return false;
+            }
+        }
+
+        public bool Delete_Item(int id)
+        {
+            try
+            {
+                Employee? dbEmployee = _db.Employees.FirstOrDefault(e => e.EmployeeId == id);
+                if (dbEmployee != null)
+                {
+                    _db.Employees.Remove(dbEmployee);
+                    _db.SaveChanges();
+
+                    return true;
+                }
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public JobType Get_EmployeeJobType(int id)
+        {
+            try
+            {
+                Employee? dbEmployee = _db.Employees.FirstOrDefault(e => e.EmployeeId == id);
+                if (dbEmployee != null)
+                {
+                    dbEmployee = Connect_EmployeeInformation(dbEmployee);
+                    return dbEmployee.Jobs.ToList()[dbEmployee.Jobs.Count - 1].JobType;
+                }
+                return null;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public void SetCurrentEmployeeId(int id)
+        {
+            _db.CurrentEmployeeid = id;
         }
     }
 }

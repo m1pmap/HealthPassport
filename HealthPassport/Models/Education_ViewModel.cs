@@ -73,12 +73,12 @@ namespace HealthPassport.Models
 
         public static explicit operator Education_ViewModel(Education education)
         {
-            var educationProcessingService = ServiceLocator.Provider.GetService<IEducationProcessing>();
+            var educationProcessingService = ServiceLocator.Provider.GetService<IGetProcessing<EducationLevel>>();
 
             return new Education_ViewModel
             {
                 EducationId = education.EducationId,
-                EducationType = educationProcessingService.Get_EducationLevelNameById(education.EducationLevelId),
+                EducationType = educationProcessingService.Get_MainParamById(education.EducationLevelId),
                 EducationInstitution = education.EducationInstitution,
                 Date = education.Date.ToString("dd.MM.yyyy"),
             };

@@ -7,10 +7,7 @@ using System.Threading.Tasks;
 
 namespace HealthPassport.BLL.Interfaces
 {
-    public interface IFamilyStatusProcessing
+    public interface IAuditLogProcessing : ICudProcessing<AuditLog>, IGetProcessing<AuditLog>
     {
-        bool Add_FamilyStatus(FamilyStatus familyStatus);
-        bool Delete_FamilyStatus(int id);
-        bool Update_FamilyStatus(FamilyStatus familyStatus);
     }
 }

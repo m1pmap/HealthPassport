@@ -5,178 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HealthPassport.Pages"
         mc:Ignorable="d"
-        Title="MoreEmployeeInfoPage" AllowsTransparency="True" Background="Transparent" Height="750" Width="843" WindowStyle="None" WindowStartupLocation="CenterScreen"
+        Title="MoreEmployeeInfoPage" AllowsTransparency="True" Background="Transparent" Height="750" Width="925" WindowStyle="None" WindowStartupLocation="CenterScreen"
         FontFamily="Arial" Loaded="Window_Loaded">
 
     <Window.Resources>
-        <!--Стиль для кнопки с закруглёнными краями-->
-        <ControlTemplate TargetType="Button" x:Key="btTemplate">
-            <Border x:Name="border"
-                    CornerRadius="10" 
-                    Background="{TemplateBinding Background}">
-                <Grid 
-                    HorizontalAlignment="Center" 
-                    VerticalAlignment="Center">
-                    <ContentPresenter HorizontalAlignment="Center" 
-                              VerticalAlignment="Center" 
-                              Content="{TemplateBinding Content}" 
-                              ContentTemplate="{TemplateBinding ContentTemplate}"/>
-                </Grid>
-            </Border>
-            <ControlTemplate.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter TargetName="border" Property="Background" Value="LightBlue"/>
-                </Trigger>
-            </ControlTemplate.Triggers>
-        </ControlTemplate>
 
-        <Style TargetType="TabItem">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="TabItem">
-                        <Border Name="Border" CornerRadius="7" BorderThickness="1.5" BorderBrush="Gray" Margin="1">
-                            <ContentPresenter x:Name="ContentSite"
-                       VerticalAlignment="Center"
-                       HorizontalAlignment="Center"
-                       ContentSource="Header"
-                       Margin="2,7,2,7"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <!-- Состояние для выбранного TabItem -->
-                            <Trigger Property="IsSelected" Value="True">
-                                <Setter TargetName="Border" Property="Background" Value="White"/>
-                                <Setter Property="Foreground" Value="Gray"/>
-                                <Setter Property="FontFamily" Value="Arial Black"/>
-                            </Trigger>
-
-                            <!-- Состояние для невыбранного TabItem -->
-                            <Trigger Property="IsSelected" Value="False">
-                                <Setter TargetName="Border" Property="Background" Value="#a3a3a4"/>
-                                <Setter Property="Foreground" Value="White"/>
-                                <Setter Property="FontFamily" Value="Arial Black"/>
-                            </Trigger>
-
-                            <!-- Состояние при наведении на TabItem -->
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Border" Property="Background" Value="White"/>
-                                <Setter Property="Foreground" Value="Gray"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style TargetType="TextBox">
-            <Setter Property="Background" Value="White"/>
-            <Setter Property="FontFamily" Value="Arial Black"/>
-            <Setter Property="Foreground" Value="Gray"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="TextBox">
-                        <Border x:Name="border"
-                                 Background="White"
-                                 BorderBrush="Gray"
-                                 BorderThickness="1.7"
-                                 CornerRadius="4">
-                            <ScrollViewer x:Name="PART_ContentHost"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <!-- Изменение цвета при фокусе -->
-                            <Trigger Property="IsFocused" Value="True">
-                                <Setter TargetName="border" Property="BorderBrush" Value="CornFlowerBlue"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <!--Стиль для кнопки без фона-->
-        <ControlTemplate TargetType="Button" x:Key="btWithoutBackgroundTemplate">
-            <Border x:Name="border">
-                <Grid 
-            HorizontalAlignment="Center" 
-            VerticalAlignment="Center">
-                    <ContentPresenter HorizontalAlignment="Center" 
-                              VerticalAlignment="Center" 
-                              Content="{TemplateBinding Content}" 
-                              ContentTemplate="{TemplateBinding ContentTemplate}"/>
-                </Grid>
-            </Border>
-            <ControlTemplate.Triggers>
-                <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="White"/>
-                </Trigger>
-            </ControlTemplate.Triggers>
-        </ControlTemplate>
-
-        <!--Стиль для dataGrid-->
-        <Style TargetType="DataGrid">
-            <!-- Make the border and grid lines a little less imposing -->
-            <Setter Property="BorderBrush" Value="#DDDDDD" />
-            <Setter Property="HorizontalGridLinesBrush" Value="#DDDDDD" />
-            <Setter Property="VerticalGridLinesBrush" Value="#DDDDDD" />
-
-            <Setter Property="RowStyle">
-                <Setter.Value>
-
-                    <Style TargetType="DataGridRow">
-                        <Style.Triggers>
-                            <!-- Highlight a grid row as the mouse passes over -->
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="LightSkyBlue"/>
-                                <Setter Property="Foreground" Value="White"/>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </Setter.Value>
-            </Setter>
-
-            <Setter Property="CellStyle">
-                <Setter.Value>
-                    <Style TargetType="DataGridCell">
-                        <Style.Triggers>
-                            <!--Highlight selected rows-->
-                            <Trigger Property="IsSelected" Value="True">
-                                <Setter Property="Background" Value="CornflowerBlue"/>
-                                <Setter Property="BorderBrush" Value="CornflowerBlue"/>
-                                <Setter Property="Foreground" Value="White" />
-                            </Trigger>
-                            <Trigger Property="IsFocused" Value="True">
-                                <Setter Property="Background" Value="CornflowerBlue"/>
-                                <Setter Property="BorderBrush" Value="CornflowerBlue"/>
-                                <Setter Property="Foreground" Value="White" />
-                            </Trigger>
-                        </Style.Triggers>
-                        <!-- Add some padding around the contents of a cell -->
-                        <Setter Property="Tag" Value="{Binding IsEditing, RelativeSource={RelativeSource Self}}"/>
-                        <Setter Property="Padding" Value="4,3,4,3" />
-                        <Setter Property="BorderBrush" Value="Transparent"/>
-                        <Setter Property="BorderThickness" Value="1"/>
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="DataGridCell">
-                                    <Border Padding="{TemplateBinding Padding}" 
-                             BorderBrush="{TemplateBinding BorderBrush}"
-                             BorderThickness="{TemplateBinding BorderThickness}"
-                             Background="{TemplateBinding Background}">
-                                        <ContentPresenter />
-                                    </Border>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                        <Setter Property="FocusVisualStyle">
-                            <Setter.Value>
-                                <Style TargetType="Control">
-                                    <Setter Property="BorderBrush" Value="Transparent" />
-                                </Style>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </Setter.Value>
-            </Setter>
-        </Style>
     </Window.Resources>
 
 
@@ -186,16 +19,17 @@
             <RowDefinition Height="703*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="595*"/>
-            <ColumnDefinition Width="59*"/>
+            <ColumnDefinition Width="76"/>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="76"/>
         </Grid.ColumnDefinitions>
 
-        <Border Background="White" Grid.Column="0" Margin="0,5,0,5" CornerRadius="10" HorizontalAlignment="Center" Width="702" BorderThickness="3" BorderBrush="Gray">
+        <Border Background="White" Grid.Column="1" Margin="0,5,0,5" CornerRadius="10" HorizontalAlignment="Center" Width="702" BorderThickness="3" BorderBrush="Gray">
             <Label x:Name="medicalCardInfo_label" Content="Медицинская карта сотрудника: Шобик Анастасия Васильевна" Foreground="Gray" Margin="0,0,0,0" FontSize="17" VerticalAlignment="Center" HorizontalAlignment="Center"
                    FontFamily="Arial Black"/>
         </Border>
 
-        <Border Background="White" CornerRadius="20" BorderBrush="Gray" BorderThickness="1 " Grid.Column="0" Grid.ColumnSpan="2" Margin="0,0,76,0" Grid.Row="1">
+        <Border Background="White" CornerRadius="20" BorderBrush="Gray" BorderThickness="1 " Grid.Column="1" Grid.ColumnSpan="3" Margin="0,0,76,0" Grid.Row="1">
 
             <Border Background="Gray" CornerRadius="18" Margin="2">
                 <Grid>
@@ -206,7 +40,7 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="240*"/>
                         <RowDefinition Height="408*"/>
-                        <RowDefinition Height="49*"/>
+                        <RowDefinition x:Name="sendMessageRow_dataGridRow" Height="49*"/>
                     </Grid.RowDefinitions>
 
                     <Border Background="White" Margin="10,10,10,10" CornerRadius="10" Grid.Column="0">
@@ -214,11 +48,11 @@
                             <StackPanel VerticalAlignment="Center">
                                 <Image x:Name="employeeImage" Margin="10,11,10,6" Source="/Resources/images/without_picture.png" MaxHeight="112"/>
 
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Visibility="Visible">
+                                <StackPanel x:Name="fileImageButtons_stackpanel" Orientation="Horizontal" HorizontalAlignment="Center" Visibility="Visible">
                                     <Button x:Name="uploadFromFile_button"
                                             Template="{StaticResource btTemplate}" 
                                             Height="40" Width="40"
-                                            Background="Coral"
+                                            Background="#f6825d"
                                             HorizontalAlignment="Left" 
                                             VerticalAlignment="Top"
                                             ToolTip="Вставить из файла"
@@ -230,17 +64,17 @@
                                     <Button x:Name="deletePhoto_button"
                                             Template="{StaticResource btTemplate}" 
                                             Height="40" Width="40"
-                                            Background="OrangeRed" 
+                                            Background="#e94e64" 
                                             VerticalAlignment="Top"
                                             ToolTip="Удалить фото" HorizontalAlignment="Left" Margin="5,0,0,0"
                                             Click="deletePhoto_button_Click">
 
-                                        <Image Source="/resources/images/delete_image.png" Height="27" Width="27" Margin="0,0,0,0"/>
+                                        <Image Source="/resources/images/delete_image.png" Height="25" Width="25" Margin="0,0,0,0"/>
                                     </Button>
 
                                     <Button x:Name="downloadToFile_button"
                                             Template="{StaticResource btTemplate}" Width="40"
-                                            Background="Coral" 
+                                            Background="#f6825d" 
                                             Margin="5,0,0,0"
                                             ToolTip="Сохранить в файл" HorizontalAlignment="Left" Height="40"
                                             Click="downloadToFile_button_Click">
@@ -249,11 +83,11 @@
                                     </Button>
                                 </StackPanel>
 
-                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="5" Visibility="Visible">
+                                <StackPanel x:Name="clipboardImageButtons_stackpanel" Orientation="Horizontal" HorizontalAlignment="Center" Margin="5" Visibility="Visible">
                                     <Button x:Name="downloadToClipboard_button"
                                             Template="{StaticResource btTemplate}" 
                                             Height="40" Width="40"
-                                            Background="#FF50CBFF" 
+                                            Background="#88c2d8" 
                                             VerticalAlignment="Top" 
                                             Margin="0,0,0,0"
                                             ToolTip="Сохранить в буфер"
@@ -264,7 +98,7 @@
                                     <Button x:Name="uploadFromClipboard"
                                             Template="{StaticResource btTemplate}" 
                                             Height="40" Width="40"
-                                            Background="#FF50CBFF" 
+                                            Background="#88c2d8" 
                                             VerticalAlignment="Top" 
                                             Margin="5,0,0,0"
                                             ToolTip="Вставить из буфера"
@@ -287,10 +121,10 @@
                                          TextChanged="textBox_TextChanged"/>
 
                                 <Label FontSize="12" Content="Текущая должность" Foreground="Gray" Margin="5,0,0,0"/>
-                                <TextBox x:Name="CurrentJob_textBox" FontFamily="Arial" FontSize="15" Width="auto" Margin="5,0,0,4" Height="22" IsEnabled="False"/>
+                                <TextBox x:Name="CurrentJob_textBox" FontFamily="Arial" FontSize="15" Width="auto" Margin="5,0,0,4" Height="22" IsReadOnly="True"/>
 
                                 <Label FontSize="12" Content="Последняя зарегестрированная болезнь" Foreground="Gray" Margin="5,0,0,0"/>
-                                <TextBox x:Name="LastDisease_textBox" Width="auto" FontFamily="Arial" FontSize="15" Margin="5,-3,0,2" Height="22" IsEnabled="False"/>
+                                <TextBox x:Name="LastDisease_textBox" Width="auto" FontFamily="Arial" FontSize="15" Margin="5,-3,0,2" Height="22" IsReadOnly="True"/>
 
                                 <StackPanel Orientation="Horizontal">
                                     <Label FontSize="12" Content="Дата рождения" Foreground="Gray" Margin="5,0,0,0"/>
@@ -305,7 +139,7 @@
                                                     FontSize="16" VerticalAlignment="Center" Height="18" Padding="5,0,0,0" 
                                                     BorderThickness="0"
                                                     SelectedDateChanged="Birthday_datePicker_SelectedDateChanged">
-                                            
+
                                         </DatePicker>
                                     </Border>
                                     <TextBox x:Name="Mail_textBox" Width="386" FontFamily="Arial" FontSize="15" Margin="5,0,0,0" VerticalAlignment="Center" Height="22"
@@ -320,32 +154,32 @@
                             <Border Background="White" CornerRadius="10">
                                 <Grid>
                                     <Grid.RowDefinitions>
-                                        <RowDefinition Height="24*"/>
+                                        <RowDefinition x:Name="diseaseConrolsPanel_dataGridRow" Height="25*"/>
                                         <RowDefinition Height="139*"/>
                                     </Grid.RowDefinitions>
 
-                                    <StackPanel Orientation="Horizontal">
+                                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
 
                                         <Button x:Name="removeDisease_button"
                                                 Template="{StaticResource btTemplate}" 
                                                 Height="35" Width="35"
-                                                Background="OrangeRed"
+                                                Background="#e94e64"
                                                 VerticalAlignment="Center"
                                                 Margin="6,0,0,0" 
                                                 ToolTip="Удалить запись"
                                                 Click="removeDisease_button_Click">
-                                            <Image Source="/resources/images/delete_image.png" Height="28" Width="28" Margin="0,0,0,0"/>
+                                            <Image Source="/resources/images/delete_image.png" Height="22" Width="22" Margin="0,0,0,0"/>
                                         </Button>
 
                                         <Button x:Name="addDisease_button"
                                                 Template="{StaticResource btTemplate}" 
                                                 Height="35" Width="35"
-                                                Background="MediumSeaGreen"
+                                                Background="DarkSeaGreen"
                                                 VerticalAlignment="Center"
                                                 Margin="5,0,5,0" 
                                                 ToolTip="Добавить запись"
                                                 Click="addDisease_button_Click">
-                                            <Image Source="/resources/images/plus.png" Height="30" Width="30" Margin="0,0,0,0"/>
+                                            <Image Source="/resources/images/plus.png" Height="27" Width="27" Margin="0,0,0,0"/>
                                         </Button>
 
                                         <Button x:Name="exportDiseasesCalc_button"
@@ -364,12 +198,13 @@
                                         <TextBox x:Name="DiseaseName_textBox" Width="427" FontFamily="Arial" FontSize="15" Margin="0,0,0,0" VerticalAlignment="Center" Height="22"/>
                                     </StackPanel>
 
-                                    <DataGrid x:Name="diseases_dataGrid" AutoGenerateColumns="False" Margin="5,1,5,5" Background="Transparent" Grid.Row="1"
+                                    <DataGrid x:Name="diseases_dataGrid" AutoGenerateColumns="False" Margin="5,5,5,5" Background="Transparent" Grid.Row="1"
                                                 MinRowHeight="20" FontSize="14"
                                                 CanUserAddRows="False" FontFamily="Arial" Foreground="Gray" 
                                                 RowHeaderWidth="0" IsReadOnly="False"
                                                 CellEditEnding="diseases_dataGrid_CellEditEnding"
                                                 BeginningEdit="diseases_dataGrid_BeginningEdit"
+                                                HeadersVisibility="Column" HorizontalScrollBarVisibility="Hidden"
                                                 >
 
                                         <DataGrid.Columns>
@@ -386,32 +221,32 @@
                             <Border Background="White" CornerRadius="10">
                                 <Grid>
                                     <Grid.RowDefinitions>
-                                        <RowDefinition Height="24*"/>
-                                        <RowDefinition Height="139*"/>
+                                        <RowDefinition x:Name="jobsConrolsPanel_dataGridRow" Height="25*"/>
+                                        <RowDefinition Height="138*"/>
                                     </Grid.RowDefinitions>
 
-                                    <StackPanel Orientation="Horizontal">
+                                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
 
                                         <Button x:Name="removeJob_button"
                                                 Template="{StaticResource btTemplate}" 
                                                 Height="35" Width="35"
-                                                Background="OrangeRed"
+                                                Background="#e94e64"
                                                 VerticalAlignment="Center"
                                                 Margin="6,0,0,0" 
                                                 ToolTip="Удалить запись"
                                                 Click="removeJob_button_Click">
-                                            <Image Source="/resources/images/delete_image.png" Height="28" Width="28" Margin="0,0,0,0"/>
+                                            <Image Source="/resources/images/delete_image.png" Height="22" Width="22" Margin="0,0,0,0"/>
                                         </Button>
 
                                         <Button x:Name="addJob_button"
                                                 Template="{StaticResource btTemplate}" 
                                                 Height="35" Width="35"
-                                                Background="MediumSeaGreen"
+                                                Background="DarkSeaGreen"
                                                 VerticalAlignment="Center"
                                                 Margin="5,0,5,0" 
                                                 ToolTip="Добавить запись"
                                                 Click="addJob_button_Click">
-                                            <Image Source="/resources/images/plus.png" Height="30" Width="30" Margin="0,0,0,0"/>
+                                            <Image Source="/resources/images/plus.png" Height="27" Width="27" Margin="0,0,0,0"/>
                                         </Button>
 
                                         <Button x:Name="exportJobsToCalc_button"
@@ -427,23 +262,20 @@
 
                                         <Label Content="Должность:" VerticalAlignment="Center" FontFamily="Arial" FontSize="14" Foreground="Gray"/>
 
-                                        <Border CornerRadius="5" BorderThickness="1.7" BorderBrush="Gray" Margin="3,12" Width="204">
-                                            <ComboBox x:Name="Job_comboBox" IsEditable="True" Margin="5,0,5,0" BorderThickness="0" Foreground="Gray" FontSize="15" FontFamily="Arial" DisplayMemberPath="JobName"/>
-                                        </Border>
+                                            <ComboBox Style="{StaticResource RoundedComboBox}" Width="204" x:Name="Job_comboBox" Margin="0,0,0,0" BorderThickness="0" Foreground="Gray" FontSize="15" FontFamily="Arial" DisplayMemberPath="JobName"/>
 
                                         <Label Content="Подразделение:" VerticalAlignment="Center" FontFamily="Arial" FontSize="14" Foreground="Gray"/>
 
-                                        <Border CornerRadius="5" BorderThickness="1.7" BorderBrush="Gray" Margin="3,12" Width="177">
-                                            <ComboBox x:Name="subunit_comboBox" IsEditable="True" Margin="5,0,5,0" BorderThickness="0" Foreground="Gray" FontSize="15" FontFamily="Arial" DisplayMemberPath="SubunitName"/>
-                                        </Border>
+                                            <ComboBox Style="{StaticResource RoundedComboBox}" Foreground="Gray" x:Name="subunit_comboBox" DisplayMemberPath="SubunitName" Width="188"/>
                                     </StackPanel>
 
-                                    <DataGrid x:Name="jobs_dataGrid" AutoGenerateColumns="False" Margin="5,1,5,5" Background="Transparent" Grid.Row="1"
+                                    <DataGrid x:Name="jobs_dataGrid" AutoGenerateColumns="False" Margin="5,5,5,5" Background="Transparent" Grid.Row="1"
                                                 MinRowHeight="20" FontSize="14"
                                                 CanUserAddRows="False" FontFamily="Arial" Foreground="Gray" 
                                                 RowHeaderWidth="0" IsReadOnly="False"
                                                 CellEditEnding="jobs_dataGrid_CellEditEnding"
-                                                BeginningEdit="jobs_dataGrid_BeginningEdit">
+                                                BeginningEdit="jobs_dataGrid_BeginningEdit" HeadersVisibility="Column"
+                                              HorizontalScrollBarVisibility="Hidden">
 
                                         <DataGrid.Columns>
                                             <DataGridComboBoxColumn Header="Должность" Width="2*"
@@ -499,32 +331,32 @@
                             <Border Background="White" CornerRadius="10">
                                 <Grid>
                                     <Grid.RowDefinitions>
-                                        <RowDefinition Height="24*"/>
+                                        <RowDefinition x:Name="familyStatusConrolsPanel_dataGridRow" Height="25*"/>
                                         <RowDefinition Height="139*"/>
                                     </Grid.RowDefinitions>
 
-                                    <StackPanel Orientation="Horizontal">
+                                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
 
                                         <Button x:Name="removeFamilyStatus_button"
                                                 Template="{StaticResource btTemplate}" 
                                                 Height="35" Width="35"
-                                                Background="OrangeRed"
+                                                Background="#e94e64"
                                                 VerticalAlignment="Center"
                                                 Margin="6,0,0,0" 
                                                 ToolTip="Удалить запись"
                                                 Click="removeFamilyStatus_button_Click">
-                                            <Image Source="/resources/images/delete_image.png" Height="28" Width="28" Margin="0,0,0,0"/>
+                                            <Image Source="/resources/images/delete_image.png" Height="22" Width="22" Margin="0,0,0,0"/>
                                         </Button>
 
                                         <Button x:Name="addFamilyStatus_button"
                                                 Template="{StaticResource btTemplate}" 
                                                 Height="35" Width="35"
-                                                Background="MediumSeaGreen"
+                                                Background="DarkSeaGreen"
                                                 VerticalAlignment="Center"
                                                 Margin="5,0,5,0" 
                                                 ToolTip="Добавить запись"
                                                 Click="addFamilyStatus_button_Click">
-                                            <Image Source="/resources/images/plus.png" Height="30" Width="30" Margin="0,0,0,0"/>
+                                            <Image Source="/resources/images/plus.png" Height="27" Width="27" Margin="0,0,0,0"/>
                                         </Button>
 
                                         <Button x:Name="exportFamilyStatusesToCalc_button"
@@ -544,12 +376,13 @@
                                         </Border>
                                     </StackPanel>
 
-                                    <DataGrid x:Name="familyStatuses_dataGrid" AutoGenerateColumns="False" Margin="5,1,5,5" Background="Transparent" Grid.Row="1"
+                                    <DataGrid x:Name="familyStatuses_dataGrid" AutoGenerateColumns="False" Margin="5,5,5,5" Background="Transparent" Grid.Row="1"
                                             MinRowHeight="20" FontSize="14"
                                             CanUserAddRows="False" FontFamily="Arial" Foreground="Gray" 
                                             RowHeaderWidth="0" IsReadOnly="False"
                                             CellEditEnding="familyStatuses_dataGrid_CellEditEnding"
-                                            BeginningEdit="familyStatuses_dataGrid_BeginningEdit">        
+                                            BeginningEdit="familyStatuses_dataGrid_BeginningEdit" HeadersVisibility="Column"
+                                              HorizontalScrollBarVisibility="Hidden">
 
                                         <DataGrid.Columns>
                                             <DataGridTextColumn Header="Семейный статус" Binding="{Binding Status}" Width="4*"/>
@@ -565,32 +398,32 @@
                             <Border Background="White" CornerRadius="10">
                                 <Grid>
                                     <Grid.RowDefinitions>
-                                        <RowDefinition Height="24*"/>
+                                        <RowDefinition x:Name="antropologicalResearchConrolsPanel_dataGridRow" Height="25*"/>
                                         <RowDefinition Height="139*"/>
                                     </Grid.RowDefinitions>
 
-                                    <StackPanel Orientation="Horizontal">
+                                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
 
                                         <Button x:Name="removeAntropologicalResearch_button"
                                                  Template="{StaticResource btTemplate}" 
                                                  Height="35" Width="35"
-                                                 Background="OrangeRed"
+                                                 Background="#e94e64"
                                                  VerticalAlignment="Center"
                                                  Margin="6,0,0,0" 
                                                  ToolTip="Удалить запись"
                                                 Click="removeAntropologicalResearch_button_Click">
-                                            <Image Source="/resources/images/delete_image.png" Height="28" Width="28" Margin="0,0,0,0"/>
+                                            <Image Source="/resources/images/delete_image.png" Height="22" Width="22" Margin="0,0,0,0"/>
                                         </Button>
 
                                         <Button x:Name="addAntropologicalResearch_button"
                                                  Template="{StaticResource btTemplate}" 
                                                  Height="35" Width="35"
-                                                 Background="MediumSeaGreen"
+                                                 Background="DarkSeaGreen"
                                                  VerticalAlignment="Center"
                                                  Margin="5,0,5,0" 
                                                  ToolTip="Добавить запись"
                                                 Click="addAntropologicalResearch_button_Click">
-                                            <Image Source="/resources/images/plus.png" Height="30" Width="30" Margin="0,0,0,0"/>
+                                            <Image Source="/resources/images/plus.png" Height="27" Width="27" Margin="0,0,0,0"/>
                                         </Button>
 
                                         <Button x:Name="exportAntropologicalResearchesCalc_button"
@@ -608,18 +441,19 @@
                                         <Label Content="Вес:" VerticalAlignment="Center" FontFamily="Arial" FontSize="14" Foreground="Gray"/>
                                         <TextBox x:Name="weight_textBox" Width="255" FontFamily="Arial" FontSize="15" Margin="0,0,0,0" VerticalAlignment="Center" Height="22" MaxLength="4"
                                                  PreviewTextInput="onlyNumbersTextBox_PreviewTextInput"/>
-                                        
+
                                         <Label Content="Рост:" VerticalAlignment="Center" FontFamily="Arial" FontSize="14" Foreground="Gray"/>
                                         <TextBox x:Name="height_textBox" Width="255" FontFamily="Arial" FontSize="15" Margin="0,0,0,0" VerticalAlignment="Center" Height="22" MaxLength="4"
                                                  PreviewTextInput="onlyNumbersTextBox_PreviewTextInput"/>
                                     </StackPanel>
 
-                                    <DataGrid x:Name="antropologicalResearches_dataGrid" AutoGenerateColumns="False" Margin="5,1,5,5" Background="Transparent" Grid.Row="1"
+                                    <DataGrid x:Name="antropologicalResearches_dataGrid" AutoGenerateColumns="False" Margin="5,5,5,5" Background="Transparent" Grid.Row="1"
                                                  MinRowHeight="20" FontSize="14"
                                                  CanUserAddRows="False" FontFamily="Arial" Foreground="Gray" 
                                                  RowHeaderWidth="0" IsReadOnly="False"
                                                  CellEditEnding="antropologicalResearches_dataGrid_CellEditEnding"
-                                                 BeginningEdit="antropologicalResearches_dataGrid_BeginningEdit">
+                                                 BeginningEdit="antropologicalResearches_dataGrid_BeginningEdit" HeadersVisibility="Column"
+                                              HorizontalScrollBarVisibility="Hidden">
 
                                         <DataGrid.Columns>
                                             <DataGridTextColumn Header="Вес" Binding="{Binding Weight}" Width="*"/>
@@ -635,32 +469,32 @@
                             <Border Background="White" CornerRadius="10">
                                 <Grid>
                                     <Grid.RowDefinitions>
-                                        <RowDefinition Height="24*"/>
+                                        <RowDefinition x:Name="vacinationConrolsPanel_dataGridRow" Height="25*"/>
                                         <RowDefinition Height="139*"/>
                                     </Grid.RowDefinitions>
 
-                                    <StackPanel Orientation="Horizontal">
+                                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
 
                                         <Button x:Name="removeVaccination_button"
                                                 Template="{StaticResource btTemplate}" 
                                                 Height="35" Width="35"
-                                                Background="OrangeRed"
+                                                Background="#e94e64"
                                                 VerticalAlignment="Center"
                                                 Margin="6,0,0,0" 
                                                 ToolTip="Удалить запись"
                                                 Click="removeVaccination_button_Click">
-                                            <Image Source="/resources/images/delete_image.png" Height="28" Width="28" Margin="0,0,0,0"/>
+                                            <Image Source="/resources/images/delete_image.png" Height="22" Width="22" Margin="0,0,0,0"/>
                                         </Button>
 
                                         <Button x:Name="addVaccination_button"
                                                 Template="{StaticResource btTemplate}" 
                                                 Height="35" Width="35"
-                                                Background="MediumSeaGreen"
+                                                Background="DarkSeaGreen"
                                                 VerticalAlignment="Center"
                                                 Margin="5,0,5,0" 
                                                 ToolTip="Добавить запись"
                                                 Click="addVaccination_button_Click">
-                                            <Image Source="/resources/images/plus.png" Height="30" Width="30" Margin="0,0,0,0"/>
+                                            <Image Source="/resources/images/plus.png" Height="27" Width="27" Margin="0,0,0,0"/>
                                         </Button>
 
                                         <Button x:Name="exportVaccinationsCalc_button"
@@ -679,12 +513,13 @@
                                         <TextBox x:Name="VaccinationName_textBox" Width="451" FontFamily="Arial" FontSize="15" Margin="0,0,0,0" VerticalAlignment="Center" Height="22"/>
                                     </StackPanel>
 
-                                    <DataGrid x:Name="vaccinations_dataGrid" AutoGenerateColumns="False" Margin="5,1,5,5" Background="Transparent" Grid.Row="1"
+                                    <DataGrid x:Name="vaccinations_dataGrid" AutoGenerateColumns="False" Margin="5,5,5,5" Background="Transparent" Grid.Row="1"
                                                 MinRowHeight="20" FontSize="14"
                                                 CanUserAddRows="False" FontFamily="Arial" Foreground="Gray" 
                                                 RowHeaderWidth="0" IsReadOnly="False"
                                                 CellEditEnding="vaccinations_dataGrid_CellEditEnding"
-                                                BeginningEdit="vaccinations_dataGrid_BeginningEdit">
+                                                BeginningEdit="vaccinations_dataGrid_BeginningEdit" HeadersVisibility="Column"
+                                              HorizontalScrollBarVisibility="Hidden">
 
                                         <DataGrid.Columns>
                                             <DataGridTextColumn Header="Прививка" Binding="{Binding Name}" Width="6*"/>
@@ -699,32 +534,32 @@
                             <Border Background="White" CornerRadius="10">
                                 <Grid>
                                     <Grid.RowDefinitions>
-                                        <RowDefinition Height="24*"/>
+                                        <RowDefinition x:Name="educationConrolsPanel_dataGridRow" Height="25*"/>
                                         <RowDefinition Height="139*"/>
                                     </Grid.RowDefinitions>
 
-                                    <StackPanel Orientation="Horizontal">
+                                    <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
 
                                         <Button x:Name="removeEducation_button"
                                                 Template="{StaticResource btTemplate}" 
                                                 Height="35" Width="35"
-                                                Background="OrangeRed"
+                                                Background="#e94e64"
                                                 VerticalAlignment="Center"
                                                 Margin="6,0,0,0" 
                                                 ToolTip="Удалить запись"
                                                 Click="removeEducation_button_Click">
-                                            <Image Source="/resources/images/delete_image.png" Height="28" Width="28" Margin="0,0,0,0"/>
+                                            <Image Source="/resources/images/delete_image.png" Height="22" Width="22" Margin="0,0,0,0"/>
                                         </Button>
 
                                         <Button x:Name="addEducation_button"
                                                 Template="{StaticResource btTemplate}" 
                                                 Height="35" Width="35"
-                                                Background="MediumSeaGreen"
+                                                Background="DarkSeaGreen"
                                                 VerticalAlignment="Center"
                                                 Margin="5,0,5,0" 
                                                 ToolTip="Добавить запись"
                                                 Click="addEducation_button_Click">
-                                            <Image Source="/resources/images/plus.png" Height="30" Width="30" Margin="0,0,0,0"/>
+                                            <Image Source="/resources/images/plus.png" Height="27" Width="27" Margin="0,0,0,0"/>
                                         </Button>
 
                                         <Button x:Name="exportEducationsCalc_button"
@@ -744,17 +579,16 @@
 
                                         <Label Content="Уровень:" VerticalAlignment="Center" FontFamily="Arial" FontSize="14" Foreground="Gray"/>
 
-                                        <Border CornerRadius="5" BorderThickness="1.7" BorderBrush="Gray" Margin="3,12" Width="198">
-                                            <ComboBox x:Name="EducationType_comboBox" IsEditable="True" Margin="5,0,5,0" BorderThickness="0" Foreground="Gray" FontSize="15" FontFamily="Arial" DisplayMemberPath="EducationLevelName"/>
-                                        </Border>
+                                            <ComboBox Style="{StaticResource RoundedComboBox}" x:Name="EducationType_comboBox" Width="202" BorderThickness="0" Foreground="Gray" FontSize="15" FontFamily="Arial" DisplayMemberPath="EducationLevelName"/>
                                     </StackPanel>
 
-                                    <DataGrid x:Name="educations_dataGrid" AutoGenerateColumns="False" Margin="5,1,5,5" Background="Transparent" Grid.Row="1"
+                                    <DataGrid x:Name="educations_dataGrid" AutoGenerateColumns="False" Margin="5,5,5,5" Background="Transparent" Grid.Row="1"
                                                 MinRowHeight="20" FontSize="14"
                                                 CanUserAddRows="False" FontFamily="Arial" Foreground="Gray" 
                                                 RowHeaderWidth="0" IsReadOnly="False"
                                                 CellEditEnding="educations_dataGrid_CellEditEnding"
-                                                BeginningEdit="educations_dataGrid_BeginningEdit">
+                                                BeginningEdit="educations_dataGrid_BeginningEdit" HeadersVisibility="Column"
+                                              HorizontalScrollBarVisibility="Hidden">
 
                                         <DataGrid.Columns>
                                             <DataGridTextColumn Header="Учреждение образования" Binding="{Binding EducationInstitution}" Width="4*"/>
@@ -797,10 +631,11 @@
                             <Button x:Name="sendMessage_button"
                                     Template="{StaticResource btTemplate}" 
                                     Height="30" Width="30"
-                                    Background="MediumSeaGreen"
+                                    Background="DarkSeaGreen"
                                     VerticalAlignment="Center"
                                     Margin="5,0,0,0" 
-                                    ToolTip="Отправить сообщение на почту">
+                                    ToolTip="Отправить сообщение на почту"
+                                    Click="sendMessage_button_Click">
                                 <Image Source="/resources/images/sendMessage.png" Margin="-2,2,0,0" Height="25" Width="25"/>
                             </Button>
                         </StackPanel>
@@ -810,11 +645,11 @@
             </Border>
         </Border>
 
-        <StackPanel HorizontalAlignment="Left" Grid.Column="1" Grid.Row="1">
+        <StackPanel HorizontalAlignment="Left" Grid.Column="2" Grid.Row="1">
             <Button x:Name="closeWindow_button"
                     Template="{StaticResource btTemplate}" 
                     Height="40" Width="40"
-                    Background="OrangeRed"
+                    Background="#e94e64"
                     VerticalAlignment="Top"
                     HorizontalAlignment="Left"
                     Margin="5,5,0,0" 
@@ -833,6 +668,24 @@
 
                 <Image Source="pack://application:,,,/resources/images/calcToExcel.png" Height="30" Width="50" VerticalAlignment="Top" Margin="0,0,0,0"/>
             </Button>
+
+            <Image x:Name="nextEmployee_button"  ToolTip="Следующий сотрудник"
+                   Source="/Resources/images/arrowRightWithBorder.png" Margin="0,200,0,0"
+                   RenderTransformOrigin="0.5,0.5" Height="42" Width="31"
+                   MouseDown="nextEmployee_button_MouseDown">
+                <Image.RenderTransform>
+                    <RotateTransform Angle="0"/>
+                </Image.RenderTransform>
+            </Image>
         </StackPanel>
+
+        <Image x:Name="prevEmployee_button"  ToolTip="Предыдущий сотрудник" Grid.Row="1"
+               Source="/Resources/images/arrowRightWithBorder.png" Margin="0,0,0,78" VerticalAlignment="Center"
+               RenderTransformOrigin="0.5,0.5" Height="42" Width="31"
+               MouseDown="prevEmployee_button_MouseDown">
+            <Image.RenderTransform>
+                <RotateTransform Angle="180"/>
+            </Image.RenderTransform>
+        </Image>
     </Grid>
 </Window>

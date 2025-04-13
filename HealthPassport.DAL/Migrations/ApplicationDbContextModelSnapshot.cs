@@ -49,6 +49,46 @@ namespace HealthPassport.DAL.Migrations
                     b.ToTable("AntropologicalResearches");
                 });
 
+            modelBuilder.Entity("HealthPassport.DAL.Models.AuditLog", b =>
+                {
+                    b.Property<int>("AuditLogId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AuditLogId"));
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ChangedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ChangedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ChangedColumns")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NewValues")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("OldValues")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PrimaryKey")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TableName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("AuditLogId");
+
+                    b.ToTable("AuditLogs", (string)null);
+                });
+
             modelBuilder.Entity("HealthPassport.DAL.Models.Disease", b =>
                 {
                     b.Property<int>("DiseaseId")
@@ -234,6 +274,9 @@ namespace HealthPassport.DAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("isCanAddRows")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("isCanEditItems")
                         .HasColumnType("bit");
 
                     b.Property<bool>("isCanSendMessages")

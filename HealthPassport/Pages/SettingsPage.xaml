@@ -1,0 +1,276 @@
+﻿<Window x:Class="HealthPassport.Pages.SettingsPage"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HealthPassport.Pages"
+        mc:Ignorable="d"
+        Title="SettingsPage" Height="650" Width="840" AllowsTransparency="True"
+        Background="Transparent" WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        Loaded="Window_Loaded">
+
+    <Window.Resources>
+        <Style TargetType="TabItem">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border Name="Border" CornerRadius="10" BorderThickness="1.5" BorderBrush="Gray">
+                            <ContentPresenter x:Name="ContentSite"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       ContentSource="Header"
+                       Margin="25,7"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <!-- Состояние для выбранного TabItem -->
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="White"/>
+                                <Setter Property="Foreground" Value="Gray"/>
+                                <Setter Property="FontFamily" Value="Arial Black"/>
+                            </Trigger>
+
+                            <!-- Состояние для невыбранного TabItem -->
+                            <Trigger Property="IsSelected" Value="False">
+                                <Setter TargetName="Border" Property="Background" Value="#a3a3a4"/>
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="FontFamily" Value="Arial Black"/>
+                            </Trigger>
+
+                            <!-- Состояние при наведении на TabItem -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="White"/>
+                                <Setter Property="Foreground" Value="Gray"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="0,0,20,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="420"/>
+            <RowDefinition x:Name="auditLogMoreInfoHeight" Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="mainSettingsPlaceWidth" Width="850*"/>
+            <ColumnDefinition Width="50*"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Background="White" CornerRadius="15" BorderThickness="1.7" BorderBrush="Gray" Grid.Row="0">
+            <Border Background="Gray" CornerRadius="12" Margin="3">
+                <TabControl Margin="10" BorderThickness="0" Grid.ColumnSpan="2" Background="Transparent">
+                    <TabItem Header="Подразделения" Margin="0,0,0,0" BorderThickness="0">
+                        <Border Background="White" CornerRadius="10" BorderThickness="0">
+                            <Grid Margin="15">
+                                <StackPanel Margin="0,0,0,0" >
+                                    <StackPanel Margin="0,0,0,0" Orientation="Horizontal" >
+                                        <Button x:Name="removeSubunit_button"
+                                                Template="{StaticResource btTemplate}" 
+                                                Height="35" Width="35"
+                                                Background="#e94e64"
+                                                VerticalAlignment="Center"
+                                                Margin="0,0,0,0" 
+                                                ToolTip="Удалить подразделение"
+                                                Click="removeSubunit_button_Click">
+                                            <Image Source="/resources/images/delete_image.png" Height="22" Width="22" Margin="0,0,0,0"/>
+                                        </Button>
+
+                                        <Button x:Name="addSubunit_button"
+                                                Template="{StaticResource btTemplate}" 
+                                                Height="35" Width="35"
+                                                Background="DarkSeaGreen"
+                                                VerticalAlignment="Center"
+                                                Margin="5,0,5,0" 
+                                                ToolTip="Добавить подразделение"
+                                                Click="addSubunit_button_Click">
+                                            <Image Source="/resources/images/plus.png" Height="27" Width="27" Margin="0,0,0,0"/>
+                                        </Button>
+
+                                        <StackPanel>
+                                            <Label Content="Наименование подразделения:" VerticalAlignment="Center" FontFamily="Arial"
+                                                    Foreground="Gray" Margin="0,-7,0,0"/>
+
+                                            <TextBox x:Name="subunitName_textBox" Padding="2" Height="24" FontFamily="Arial"
+                                                        Width="545" Margin="0,-5,0,0" Foreground="Gray" FontSize="16"/>
+                                        </StackPanel>
+                                    </StackPanel>
+
+                                    <DataGrid x:Name="subunit_dataGrid" AutoGenerateColumns="False" Margin="0,10" Background="Transparent" Grid.Row="1"
+                                                MinRowHeight="20" FontSize="14"
+                                                CanUserAddRows="False" FontFamily="Arial" Foreground="Gray" 
+                                                RowHeaderWidth="0" IsReadOnly="False"
+                                                HeadersVisibility="Column" 
+                                              HorizontalScrollBarVisibility="Hidden" 
+                                              Height="274" VerticalScrollBarVisibility="Hidden"
+                                              CellEditEnding="subunit_dataGrid_CellEditEnding">
+
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="Наименование подразделения" Binding="{Binding SubunitName}" Width="*"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </TabItem>
+
+                    <TabItem Header="Должности" Margin="0,0,0,0" BorderThickness="0">
+                        <Border Background="White" CornerRadius="10" BorderThickness="0">
+                            <Grid Margin="15">
+                                <StackPanel Margin="0,0,0,0">
+                                    <StackPanel Margin="0,0,0,0" Orientation="Horizontal">
+                                        <Button x:Name="removeJobType_button"
+                                                Template="{StaticResource btTemplate}" 
+                                                Height="35" Width="35"
+                                                Background="#e94e64"
+                                                VerticalAlignment="Center"
+                                                Margin="0,0,0,0" 
+                                                ToolTip="Удалить должность"
+                                                Click="removeJobType_button_Click">
+                                            <Image Source="/resources/images/delete_image.png" Height="22" Width="22" Margin="0,0,0,0"/>
+                                        </Button>
+
+                                        <Button x:Name="addJobType_button"
+                                                Template="{StaticResource btTemplate}" 
+                                                Height="35" Width="35"
+                                                Background="DarkSeaGreen"
+                                                VerticalAlignment="Center"
+                                                Margin="5,0,5,0" 
+                                                ToolTip="Добавить должность"
+                                                Click="addJobType_button_Click">
+                                            <Image Source="/resources/images/plus.png" Height="27" Width="27" Margin="0,0,0,0"/>
+                                        </Button>
+
+                                        <StackPanel>
+                                            <Label Content="Наименование должности:" VerticalAlignment="Center" FontFamily="Arial"
+                                                    Foreground="Gray" Margin="0,-7,0,0"/>
+
+                                            <TextBox x:Name="jobTypeName_textBox" Padding="2" Height="24" FontFamily="Arial"
+                                                    Width="546" Margin="0,-5,0,0" Foreground="Gray" FontSize="16"/>
+                                        </StackPanel>
+                                    </StackPanel>
+
+                                    <DataGrid x:Name="jobType_dataGrid" AutoGenerateColumns="False" Margin="0,10" Background="Transparent" Grid.Row="1"
+                                              MinRowHeight="20" FontSize="14"
+                                              CanUserAddRows="False" FontFamily="Arial" Foreground="Gray" 
+                                              RowHeaderWidth="0" IsReadOnly="False"
+                                              HeadersVisibility="Column" 
+                                              HorizontalScrollBarVisibility="Hidden" 
+                                              Height="274" VerticalScrollBarVisibility="Hidden"
+                                              CellEditEnding="jobType_dataGrid_CellEditEnding">
+
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="Наименование должности" Binding="{Binding JobName}" Width="4*"/>
+
+                                            <DataGridCheckBoxColumn Header="Добавление"
+                                                        Binding="{Binding isCanAddRows}" 
+                                                        Width="2*" />
+
+                                            <DataGridCheckBoxColumn Header="Отправка сообщений" Binding="{Binding isCanSendMessages}" Width="3*"/>
+
+                                            <DataGridCheckBoxColumn Header="Изменение" Binding="{Binding isCanEditItems}" Width="2*" />
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </TabItem>
+
+
+                    <TabItem Header="Последние действия" Margin="0,0,0,0" BorderThickness="0">
+                        <Border Background="White" CornerRadius="10" BorderThickness="0">
+                            <Grid Margin="15">
+                                <StackPanel Margin="0,0,0,0">
+                                    <CheckBox Content="Отображать дополнительную информацию" VerticalContentAlignment="Center"
+                                              FontFamily="Arial" Foreground="Gray"
+                                              Checked="CheckBox_Checked"
+                                              Unchecked="CheckBox_Unchecked"/>
+
+                                    <DataGrid x:Name="auditLogs_dataGrid" AutoGenerateColumns="False" Margin="0,10" Background="Transparent" Grid.Row="1"
+                                                      MinRowHeight="20" FontSize="14"
+                                                      CanUserAddRows="False" FontFamily="Arial" Foreground="Gray" 
+                                                      RowHeaderWidth="0"
+                                                      CanUserSortColumns="False"
+                                                      HeadersVisibility="Column" 
+                                                      IsReadOnly="True"
+                                                      HorizontalScrollBarVisibility="Hidden" 
+                                                      Height="295" VerticalScrollBarVisibility="Hidden"
+                                                      SelectedCellsChanged="auditLogs_dataGrid_SelectedCellsChanged">
+
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="Наименование таблицы" Binding="{Binding TableName}" Width="1.6*"/>
+
+                                            <DataGridTextColumn Header="Действие" Binding="{Binding Action}"  Width="0.8*" />
+
+                                            <DataGridTextColumn Header="Измененные колонки" Binding="{Binding ChangedColumns}" Width="1.5*">
+                                                <DataGridTextColumn.ElementStyle>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="ToolTip" Value="{Binding ChangedColumns}" />
+                                                    </Style>
+                                                </DataGridTextColumn.ElementStyle>
+                                            </DataGridTextColumn>
+
+                                            <!--<DataGridTextColumn Header="Старое значение" Binding="{Binding OldValues}" Width="150" />
+                                            <DataGridTextColumn Header="Новое значение" Binding="{Binding NewValues}" Width="140" />-->
+                                            <DataGridTextColumn Header="Пользователь" Binding="{Binding ChangedBy}" Width="*" />
+                                            <DataGridTextColumn Header="Дата" Binding="{Binding ChangedAt, StringFormat=dd.MM.yyyy}" Width="*"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                    </TabItem>
+                </TabControl>
+            </Border>
+
+        </Border>
+
+        <Border Background="White" CornerRadius="15" BorderThickness="1.7" BorderBrush="Gray" Grid.Row="1" Margin="5,5,5,5">
+            <Border Background="Gray" CornerRadius="12" Margin="3">
+                <Border Background="White" Margin="8" CornerRadius="8">
+                    <StackPanel Margin="10">
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,-5">
+                            <Label Content="Измененные колонки:" FontFamily="Arial" Foreground="Gray"/>
+                            <Label Content="Id элемента:" FontFamily="Arial" Foreground="Gray" Margin="504,0,0,0"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBox x:Name="changedColumns_textBox" Padding="2" FontFamily="Arial" Foreground="Gray" FontSize="15" Width="626"/>
+                            <TextBox x:Name="changedElementId_textBox" Padding="2" FontFamily="Arial" Foreground="Gray" FontSize="15" Width="83" Margin="10,0,0,0"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,-5">
+                            <Label Content="Старое значение:" FontFamily="Arial" Foreground="Gray"/>
+                            <Label Content="Новое значение:" FontFamily="Arial" Foreground="Gray" Margin="255,0,0,0"/>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal">
+                            <TextBox x:Name="oldValue_textBox" Padding="2" FontFamily="Arial" Foreground="Gray" FontSize="15" Width="355" Height="110" TextWrapping="Wrap"/>
+                            <TextBox x:Name="newValue_textBox" Padding="2" FontFamily="Arial" Foreground="Gray" FontSize="15" Width="354" Margin="10,0,0,0" TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </Border>
+        </Border>
+
+
+
+        <Button x:Name="exit_button" Grid.Column="1"
+            Template="{StaticResource btTemplate}" 
+            Height="35" Width="35"
+            Background="#e94e64" 
+            VerticalAlignment="Top"
+            HorizontalAlignment="Center"
+            Margin="0,10,0,0" 
+            ToolTip="Удалить выбранный товар"
+            Click="exit_button_Click">
+
+            <Image Source="/resources/images/delete_image.png" Height="25" Width="25" Margin="0,0,0,0"/>
+        </Button>
+    </Grid>
+</Window>

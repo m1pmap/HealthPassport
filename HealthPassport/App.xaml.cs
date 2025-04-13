@@ -14,6 +14,7 @@ using HealthPassport.Interfaces;
 using Dahmira.Services;
 using Microsoft.EntityFrameworkCore;
 using HealthPassport.Models;
+using HealthPassport.DAL.Models;
 
 namespace HealthPassport
 {
@@ -43,31 +44,43 @@ namespace HealthPassport
             services.AddSingleton<NullToEmptyStringConverter>();
             services.AddScoped<IImageUpdater, ImageUpdater_Service>();
             services.AddScoped<IFileWorker, FileWorker_Service>();
-            services.AddScoped<IExcelWorker, ExcelWorker_Service>();
-            services.AddScoped<IWordWorker, WordWorker_Service>();
+            services.AddKeyedScoped<IExportWorker, ExcelWorker_Service>("Excel");
+            services.AddKeyedScoped<IExportWorker, WordWorker_Service>("Word");
             services.AddScoped<IShaderEffects, ShaderEffects_Service>();
+
             //Регистрация BLL сервисов
             services.AddScoped<IMailSender, MailSender_Service>();
-            services.AddScoped<IEmployeeProcessing, EmployeeProcessing_Service>();
-            services.AddScoped<IDiseaseProcessing, DiseaseProcessing_Service>();
-            services.AddScoped<IVaccinationProcessing, VaccinationProcessing_Service>();
-            services.AddScoped<IJobProcessing, JobProcessing_Service>();
-            services.AddScoped<IFamilyStatusProcessing, FamilyStatusProcessing_Service>();
-            services.AddScoped<IAntropologicalResearchProcessing, AntropologicalResearchProcessing_Service>();
-            services.AddScoped<IEducationProcessing, EducationProcessing_Service>();
             services.AddScoped<IJsonSerializer, JsonSerializer_Service>();
+
+            services.AddScoped<IEmployeeProcessing, EmployeeProcessing_Service>();
+            services.AddScoped<ISubunitProcessing, SubunitProcessing_Service>();
+            services.AddScoped<IJobTypeProcessing, JobTypeProcessing_Service>();
+            services.AddScoped<IAuditLogProcessing, AuditLogProcessing_Service>();
+
+            services.AddScoped<ICudProcessing<Job>, JobProcessing_Service>();
+            //services.AddScoped<IGetProcessing<JobType>, JobTypeProcessing_Service>();
+            services.AddScoped<ICudProcessing<Education>, EducationProcessing_Service>();
+            services.AddScoped<IGetProcessing<EducationLevel>, EducationLevelProcessing_Service>();
+            services.AddScoped<ICudProcessing<AntropologicalResearch>, AntropologicalResearchProcessing_Service>();
+            services.AddScoped<IDiseaseProcessing, DiseaseProcessing_Service>();
+            services.AddScoped<ICudProcessing<Vaccination>, VaccinationProcessing_Service>();
+            services.AddScoped<ICudProcessing<FamilyStatus>, FamilyStatusProcessing_Service>();
 
             //Регистрация DAL репозиториев
             services.AddScoped<IEmployee, Employee_Repository>();
             services.AddScoped<IDisease, Disease_Repository>();
-            services.AddScoped<IVaccination, Vaccination_Repository>();
-            services.AddScoped<IJob, Job_Repository>();
-            services.AddScoped<IJobType, JobType_Repository>();
-            services.AddScoped<IFamilyStatus, FamilyStatus_Repository>();
-            services.AddScoped<IAntropologicalResearch, AntropologicalResearch_Repository>();
-            services.AddScoped<IEducation, Education_Repository>();
             services.AddScoped<ISubunit, Subunit_Repository>();
-            services.AddScoped<IEducationLevel, EducationLevel_Repository>();
+            services.AddScoped<IJobType, JobType_Repository>();
+            services.AddScoped<IAuditLog, AuditLog_Repository>();
+
+            services.AddScoped(typeof(ICudRepository<Vaccination>), typeof(Vaccination_Repository));
+            services.AddScoped(typeof(ICudRepository<Job>), typeof(Job_Repository));
+            //services.AddScoped(typeof(IGetRepository<JobType>), typeof(JobType_Repository));
+            services.AddScoped(typeof(ICudRepository<FamilyStatus>), typeof(FamilyStatus_Repository));
+            services.AddScoped(typeof(ICudRepository<AntropologicalResearch>), typeof(AntropologicalResearch_Repository));
+            services.AddScoped(typeof(ICudRepository<Education>), typeof(Education_Repository));
+            //services.AddScoped(typeof(IGetRepository<Subunit>), typeof(Subunit_Repository));
+            services.AddScoped(typeof(IGetRepository<EducationLevel>), typeof(EducationLevel_Repository));
 
             //Регистрация контекста БД
             services.AddDbContext<ApplicationDbContext>();
@@ -77,6 +90,10 @@ namespace HealthPassport
             services.AddTransient<LoginPage>();
             services.AddTransient<WriteMailCodePage>();
             services.AddTransient<MoreEmployeeInfoPage>();
+            services.AddTransient<VaccnationsAddPage>();
+            services.AddTransient<RefactoredEmployeesPage>();
+            services.AddTransient<FastSearchPage>();
+            services.AddTransient<SettingsPage>();
 
 
             return services.BuildServiceProvider();

@@ -5,6 +5,7 @@ using HealthPassport.DAL.Models;
 using HealthPassport.Interfaces;
 using HealthPassport.Models;
 using HealthPassport.Services;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SqlServer.Server;
 using System;
 using System.Collections.Generic;
@@ -32,6 +33,7 @@ namespace HealthPassport.Pages
     /// </summary>
     public partial class MoreEmployeeInfoPage : Window
     {
+        public Employee_ViewModel currentUser;
         public Employee_ViewModel selectedEmployee;
         public List<JobType> jobTypes = new List<JobType>();
         bool isWindowLoaded = false;
@@ -42,29 +44,37 @@ namespace HealthPassport.Pages
 
         private readonly ByteArrayToImageSourceConverter_Service _imageSourceConverter;
         private readonly IDiseaseProcessing _diseaseProcessingService;
-        private readonly IVaccinationProcessing _vaccinationProcessingService;
-        private readonly IFamilyStatusProcessing _familyProcessingService;
-        private readonly IAntropologicalResearchProcessing _antropologicalResearchProcessingService;
-        private readonly IEducationProcessing _educationProcessingService;
-        private readonly IJobProcessing _jobProcessingService;
+        private readonly ICudProcessing<Vaccination> _vaccinationProcessingService;
+        private readonly ICudProcessing<FamilyStatus> _familyProcessingService;
+        private readonly ICudProcessing<AntropologicalResearch> _antropologicalResearchProcessingService;
+        private readonly ISubunitProcessing _subunitProcessingService;
+        private readonly ICudProcessing<Education> _educationProcessingService;
+        private readonly IGetProcessing<EducationLevel> _educationLevelProcessingService;
+        private readonly ICudProcessing<Job> _jobProcessingService;
+        private readonly IJobTypeProcessing _jobTypeProcessingService;
         private readonly IEmployeeProcessing _employeeProcessingService;
         private readonly IImageUpdater _imageUpdater;
-        private readonly IExcelWorker _excelWorkerService;
-        private readonly IWordWorker _wordWorkerService;
+        private readonly IServiceProvider _serviceProvider;
+        private readonly IExportWorker _excelWorkerService;
+        private readonly IExportWorker _wordWorkerService;
+        private readonly IMailSender _mailSenderService;
 
         string _cellOldValue = string.Empty; //Старое значение ячейки до изменения
 
         public MoreEmployeeInfoPage(ByteArrayToImageSourceConverter_Service imageSourceConverter,
             IDiseaseProcessing diseaseProcessingService,
-            IVaccinationProcessing vaccinationProcessingService,
-            IFamilyStatusProcessing familyProcessingService,
-            IAntropologicalResearchProcessing antropologicalResearchProcessingService,
-            IEducationProcessing educationProcessingService,
-            IJobProcessing jobProcessingService,
+            ICudProcessing<Vaccination> vaccinationProcessingService,
+            ICudProcessing<FamilyStatus> familyProcessingService,
+            ICudProcessing<AntropologicalResearch> antropologicalResearchProcessingService,
+            ISubunitProcessing subunitProcessingService,
+            ICudProcessing<Education> educationProcessingService,
+            IGetProcessing<EducationLevel> educationLevelProcessingService,
+            ICudProcessing<Job> jobProcessingService,
+            IJobTypeProcessing jobTypeProcessingService,
             IEmployeeProcessing employeeProcessingService,
             IImageUpdater imageUpdater,
-            IExcelWorker excelWorkerService,
-            IWordWorker wordWorkerService)
+            IServiceProvider serviceProvider,
+            IMailSender mailSenderService)
         {
             InitializeComponent();
 
@@ -73,12 +83,17 @@ namespace HealthPassport.Pages
             _vaccinationProcessingService = vaccinationProcessingService;
             _familyProcessingService = familyProcessingService;
             _antropologicalResearchProcessingService = antropologicalResearchProcessingService;
+            _subunitProcessingService = subunitProcessingService;
             _educationProcessingService = educationProcessingService;
+            _educationLevelProcessingService = educationLevelProcessingService;
             _jobProcessingService = jobProcessingService;
+            _jobTypeProcessingService = jobTypeProcessingService;
             _employeeProcessingService = employeeProcessingService;
             _imageUpdater = imageUpdater;
-            _excelWorkerService = excelWorkerService;
-            _wordWorkerService = wordWorkerService;
+            _serviceProvider = serviceProvider;
+            _excelWorkerService = serviceProvider.GetRequiredKeyedService<IExportWorker>("Excel");
+            _wordWorkerService = serviceProvider.GetRequiredKeyedService<IExportWorker>("Word");
+            _mailSenderService = mailSenderService;
         }
 
         private void closeWindow_button_Click(object sender, RoutedEventArgs e)
@@ -113,7 +128,7 @@ namespace HealthPassport.Pages
 
             if (selectedEmployee.Diseases.Count > 0) 
             {
-                LastDisease_textBox.Text = selectedEmployee.Diseases[selectedEmployee.Diseases.Count - 1].Name;
+                LastDisease_textBox.Text = selectedEmployee.Diseases[0].Name;
             }
             else
             {
@@ -126,15 +141,15 @@ namespace HealthPassport.Pages
             DataContext = this;
 
             //Заполнение таблиц данных из бд
-            List<JobType> jobTypes = _jobProcessingService.GetAllJobTypes();
+            List<JobType> jobTypes = _jobTypeProcessingService.Get_AllItems();
             JobTypesValues = jobTypes.Select(j => j.JobName).ToList();
             Job_comboBox.ItemsSource = jobTypes;
 
-            List<Subunit> subunits = _jobProcessingService.GetAllSubunits();
+            List<Subunit> subunits = _subunitProcessingService.Get_AllItems();
             SubunitsValues = subunits.Select(j => j.SubunitName).ToList();
             subunit_comboBox.ItemsSource = subunits;
 
-            List<EducationLevel> educationLevels = _educationProcessingService.GetAllEducationLevels();
+            List<EducationLevel> educationLevels = _educationLevelProcessingService.Get_AllItems();
             EducationLevelsValue = educationLevels.Select(j => j.EducationLevelName).ToList();
             EducationType_comboBox.ItemsSource = educationLevels;
 
@@ -146,6 +161,37 @@ namespace HealthPassport.Pages
             antropologicalResearches_dataGrid.ItemsSource = selectedEmployee.AntropologicalResearches;
             educations_dataGrid.ItemsSource = selectedEmployee.Educations;
             jobs_dataGrid.ItemsSource = selectedEmployee.Jobs;
+
+            JobType currentJobType = _employeeProcessingService.Get_EmployeeJobType(currentUser.EmployeeId);
+            if (!currentJobType.isCanSendMessages || currentUser.EmployeeId == selectedEmployee.EmployeeId)
+            {
+                sendMessageRow_dataGridRow.Height = new GridLength(0);
+            }
+
+            if (!currentJobType.isCanEditItems && currentUser.EmployeeId != selectedEmployee.EmployeeId)
+            {
+                clipboardImageButtons_stackpanel.Visibility = Visibility.Collapsed;
+                fileImageButtons_stackpanel.Visibility = Visibility.Collapsed;
+                employeeImage.MaxHeight = 195;
+
+                diseaseConrolsPanel_dataGridRow.Height = new GridLength(0);
+                jobsConrolsPanel_dataGridRow.Height = new GridLength(0);
+                familyStatusConrolsPanel_dataGridRow.Height = new GridLength(0);
+                educationConrolsPanel_dataGridRow.Height = new GridLength(0);
+                vacinationConrolsPanel_dataGridRow.Height = new GridLength(0);
+                antropologicalResearchConrolsPanel_dataGridRow.Height = new GridLength(0);
+
+                FIO_textBox.IsReadOnly = true;
+                Birthday_datePicker.IsEnabled = false;
+                Mail_textBox.IsReadOnly = true;
+
+                diseases_dataGrid.IsReadOnly = true;
+                jobs_dataGrid.IsReadOnly = true;
+                familyStatuses_dataGrid.IsReadOnly = true;
+                educations_dataGrid.IsReadOnly = true;
+                vaccinations_dataGrid.IsReadOnly = true;
+                antropologicalResearches_dataGrid.IsReadOnly = true;
+            }
 
             isWindowLoaded = true;
         }
@@ -159,8 +205,8 @@ namespace HealthPassport.Pages
             else
             {
                 Disease newDisease = new Disease { EmployeeId = selectedEmployee.EmployeeId, StardDiseaseDate = DateTime.Now, EndDiseaseDate = DateTime.Now, Name = DiseaseName_textBox.Text };
-                _diseaseProcessingService.Add_Disease(newDisease);
-                selectedEmployee.Diseases.Add((Disease_ViewModel)newDisease);
+                _diseaseProcessingService.Add_Item(newDisease);
+                selectedEmployee.Diseases.Insert(0, (Disease_ViewModel)newDisease);
 
                 diseases_dataGrid.Items.Refresh();
                 DiseaseName_textBox.Text = string.Empty;
@@ -175,7 +221,7 @@ namespace HealthPassport.Pages
             if(selectedDisease != null)
             {
                 selectedEmployee.Diseases.Remove(selectedDisease);
-                _diseaseProcessingService.Delete_Disease(selectedDisease.DiseaseId);
+                _diseaseProcessingService.Delete_Item(selectedDisease.DiseaseId);
 
                 diseases_dataGrid.Items.Refresh();
                 if(selectedEmployee.Diseases.Count > 0)
@@ -221,7 +267,10 @@ namespace HealthPassport.Pages
                             EndDiseaseDate = DateTime.ParseExact(selectedItem.EndDiseaseDate, format, culture)
                         };
 
-                        _diseaseProcessingService.Update_Disease(disease);
+                        if (!_diseaseProcessingService.Update_Item(disease))
+                        {
+                            MessageBox.Show("!!!!");
+                        }
                     }
                 }
                 catch
@@ -241,7 +290,7 @@ namespace HealthPassport.Pages
                     if (e.Column.Header.ToString() == "Дата окончания")
                         selectedItem.EndDiseaseDate = _cellOldValue;
 
-                    diseases_dataGrid.Items.Refresh();
+                    //diseases_dataGrid.Items.Refresh();
                 }
             }), DispatcherPriority.Background);
         }
@@ -283,7 +332,7 @@ namespace HealthPassport.Pages
                             Date = DateTime.ParseExact(selectedItem.Date, format, culture),
                         };
 
-                        _vaccinationProcessingService.Update_Vaccination(vaccination);
+                        _vaccinationProcessingService.Update_Item(vaccination);
                     }
                 }
                 catch
@@ -317,8 +366,8 @@ namespace HealthPassport.Pages
             else
             {
                 Vaccination newVaccination = new Vaccination { EmployeeId = selectedEmployee.EmployeeId, Date = DateTime.Now, Name = VaccinationName_textBox.Text };
-                _vaccinationProcessingService.Add_Vaccination(newVaccination);
-                selectedEmployee.Vaccinations.Add((Vaccination_ViewModel)newVaccination);
+                _vaccinationProcessingService.Add_Item(newVaccination);
+                selectedEmployee.Vaccinations.Insert(0, (Vaccination_ViewModel)newVaccination);
 
                 vaccinations_dataGrid.Items.Refresh();
                 VaccinationName_textBox.Text = string.Empty;
@@ -331,7 +380,7 @@ namespace HealthPassport.Pages
             if (selectedVaccination != null)
             {
                 selectedEmployee.Vaccinations.Remove(selectedVaccination);
-                _vaccinationProcessingService.Delete_Vaccination(selectedVaccination.VaccinationId);
+                _vaccinationProcessingService.Delete_Item(selectedVaccination.VaccinationId);
 
                 vaccinations_dataGrid.Items.Refresh();
             }
@@ -341,7 +390,7 @@ namespace HealthPassport.Pages
         {
             if (selectedEmployee.FamilyStatuses.Count > 0)
             {
-                FamilyStatus_ViewModel lastFamilyStatus = selectedEmployee.FamilyStatuses[selectedEmployee.FamilyStatuses.Count - 1];
+                FamilyStatus_ViewModel lastFamilyStatus = selectedEmployee.FamilyStatuses[0];
                 lastFamilyStatus.Status = "Разведён";
                 lastFamilyStatus.EndFamilyDate = DateTime.Now.ToString("dd.MM.yyyy");
 
@@ -353,12 +402,12 @@ namespace HealthPassport.Pages
                     EndFamilyDate = DateTime.Now
                 };
 
-                _familyProcessingService.Update_FamilyStatus(updatedFamilyStatus);
+                _familyProcessingService.Update_Item(updatedFamilyStatus);
             }
 
             FamilyStatus newFamilyStatus = new FamilyStatus { EmployeeId = selectedEmployee.EmployeeId, Status = "Женат", StartFamilyDate = startFamilyDate_datePicker.SelectedDate.Value, EndFamilyDate = DateTime.MinValue };
-            _familyProcessingService.Add_FamilyStatus(newFamilyStatus);
-            selectedEmployee.FamilyStatuses.Add((FamilyStatus_ViewModel)newFamilyStatus);
+            _familyProcessingService.Add_Item(newFamilyStatus);
+            selectedEmployee.FamilyStatuses.Insert(0, (FamilyStatus_ViewModel)newFamilyStatus);
             selectedEmployee.FamilyStatus = newFamilyStatus.Status;
             familyStatuses_dataGrid.Items.Refresh();
         }
@@ -369,11 +418,11 @@ namespace HealthPassport.Pages
             if (selectedFamilyStatus != null)
             {
                 selectedEmployee.FamilyStatuses.Remove(selectedFamilyStatus);
-                _familyProcessingService.Delete_FamilyStatus(selectedFamilyStatus.FamilyStatusId);
+                _familyProcessingService.Delete_Item(selectedFamilyStatus.FamilyStatusId);
 
                 if (selectedEmployee.FamilyStatuses.Count > 0)
                 {
-                    selectedEmployee.FamilyStatus = selectedEmployee.FamilyStatuses[selectedEmployee.FamilyStatuses.Count - 1].Status;
+                    selectedEmployee.FamilyStatus = selectedEmployee.FamilyStatuses[0].Status;
                 }
                 else
                 {
@@ -415,7 +464,7 @@ namespace HealthPassport.Pages
                             EndFamilyDate = DateTime.MinValue
                         };
 
-                        _familyProcessingService.Update_FamilyStatus(familyStatus);
+                        _familyProcessingService.Update_Item(familyStatus);
 
                         return;
                     }
@@ -446,7 +495,7 @@ namespace HealthPassport.Pages
                                 EndFamilyDate = DateTime.ParseExact(selectedItem.EndFamilyDate, format, culture)
                             };
 
-                            _familyProcessingService.Update_FamilyStatus(familyStatus);
+                            _familyProcessingService.Update_Item(familyStatus);
                         }
                     }
                 }
@@ -503,8 +552,8 @@ namespace HealthPassport.Pages
                     Height = double.Parse(height_textBox.Text, NumberStyles.Any, culture), 
                     Date = DateTime.Now 
                 };
-                _antropologicalResearchProcessingService.Add_AntropologicalResearch(newAntropologicalResearch);
-                selectedEmployee.AntropologicalResearches.Add((AntropologicalResearch_ViewModel)newAntropologicalResearch);
+                _antropologicalResearchProcessingService.Add_Item(newAntropologicalResearch);
+                selectedEmployee.AntropologicalResearches.Insert(0, (AntropologicalResearch_ViewModel)newAntropologicalResearch);
 
                 antropologicalResearches_dataGrid.Items.Refresh();
 
@@ -519,7 +568,7 @@ namespace HealthPassport.Pages
             if (selectedAntropologicalResearch != null)
             {
                 selectedEmployee.AntropologicalResearches.Remove(selectedAntropologicalResearch);
-                _antropologicalResearchProcessingService.Delete_AntropologicalResearch(selectedAntropologicalResearch.AntropologicalResearchId);
+                _antropologicalResearchProcessingService.Delete_Item(selectedAntropologicalResearch.AntropologicalResearchId);
 
                 antropologicalResearches_dataGrid.Items.Refresh();
             }
@@ -555,7 +604,7 @@ namespace HealthPassport.Pages
                             Date = DateTime.ParseExact(selectedItem.Date, format, culture),
                         };
 
-                        _antropologicalResearchProcessingService.Update_AntropologicalResearch(antropologicalResearch);
+                        _antropologicalResearchProcessingService.Update_Item(antropologicalResearch);
                     }
                 }
                 catch
@@ -590,38 +639,38 @@ namespace HealthPassport.Pages
             {
                 if (selectedEmployee.Jobs.Count > 0)
                 {
-                    Job_ViewModel lastJob = selectedEmployee.Jobs[selectedEmployee.Jobs.Count - 1];
+                    Job_ViewModel lastJob = selectedEmployee.Jobs[0];
                     lastJob.EndWorkingDate = DateTime.Now.ToString("dd.MM.yyyy");
 
                     Job updatedJob = new Job
                     {
                         JobId = lastJob.JobId,
-                        SubunitId = _jobProcessingService.Get_SubunitIdByName(lastJob.Subunit),
+                        SubunitId = _subunitProcessingService.Get_IdByMainParam(lastJob.Subunit),
                         WorkingRate = lastJob.WorkingRate,
                         StartWorkingDate = DateTime.ParseExact(lastJob.StartWorkingDate, "dd.MM.yyyy", CultureInfo.InvariantCulture),
                         EndWorkingDate = DateTime.Now,
                         EmployeeId = selectedEmployee.EmployeeId,
-                        JobTypeId = _jobProcessingService.Get_JobTypeIdByName(lastJob.JobName)
+                        JobTypeId = _jobTypeProcessingService.Get_IdByMainParam(lastJob.JobName)
                     };
 
-                    _jobProcessingService.Update_Job(updatedJob);
+                    _jobProcessingService.Update_Item(updatedJob);
                 }
 
                 Job newJob = new Job
                 {
-                    SubunitId = _jobProcessingService.Get_SubunitIdByName(subunit_comboBox.Text),
+                    SubunitId = _subunitProcessingService.Get_IdByMainParam(subunit_comboBox.Text),
                     WorkingRate = 805,
                     StartWorkingDate = DateTime.Now,
                     EndWorkingDate = DateTime.MinValue,
                     EmployeeId = selectedEmployee.EmployeeId,
-                    JobTypeId = _jobProcessingService.Get_JobTypeIdByName(Job_comboBox.Text),
+                    JobTypeId = _jobTypeProcessingService.Get_IdByMainParam(Job_comboBox.Text),
                 };
-                _jobProcessingService.Add_Job(newJob);
-                selectedEmployee.Jobs.Add((Job_ViewModel)newJob);
+                _jobProcessingService.Add_Item(newJob);
+                selectedEmployee.Jobs.Insert(0, (Job_ViewModel)newJob);
                 selectedEmployee.Job = Job_comboBox.Text;
 
                 jobs_dataGrid.Items.Refresh();
-                CurrentJob_textBox.Text = selectedEmployee.Jobs[selectedEmployee.Jobs.Count - 1].JobName;
+                CurrentJob_textBox.Text = selectedEmployee.Jobs[0].JobName;
 
                 Job_comboBox.Text = string.Empty;
                 subunit_comboBox.Text = string.Empty;
@@ -634,7 +683,7 @@ namespace HealthPassport.Pages
             if (selectedJob != null)
             {
                 selectedEmployee.Jobs.Remove(selectedJob);
-                _jobProcessingService.Delete_Job(selectedJob.JobId);
+                _jobProcessingService.Delete_Item(selectedJob.JobId);
 
                 if (selectedEmployee.Jobs.Count > 0)
                 {
@@ -667,7 +716,7 @@ namespace HealthPassport.Pages
                         if (e.Column.Header.ToString() == "Должность")
                         {
                             selectedItem.JobName = comboBox.SelectedItem.ToString();
-                            if(selectedEmployee.Jobs.IndexOf(selectedItem) == selectedEmployee.Jobs.Count - 1)
+                            if(selectedEmployee.Jobs.IndexOf(selectedItem) == 0)
                             {
                                 CurrentJob_textBox.Text = comboBox.SelectedItem.ToString();
                                 selectedEmployee.Job = comboBox.SelectedItem.ToString();
@@ -692,15 +741,15 @@ namespace HealthPassport.Pages
                         Job updatedJob = new Job
                         {
                             JobId = selectedItem.JobId,
-                            SubunitId = _jobProcessingService.Get_SubunitIdByName(selectedItem.Subunit),
+                            SubunitId = _subunitProcessingService.Get_IdByMainParam(selectedItem.Subunit),
                             WorkingRate = selectedItem.WorkingRate,
                             StartWorkingDate = DateTime.ParseExact(selectedItem.StartWorkingDate, format, culture),
                             EndWorkingDate = DateTime.MinValue,
                             EmployeeId = selectedEmployee.EmployeeId,
-                            JobTypeId = _jobProcessingService.Get_JobTypeIdByName(selectedItem.JobName)
+                            JobTypeId = _jobTypeProcessingService.Get_IdByMainParam(selectedItem.JobName)
                         };
 
-                        _jobProcessingService.Update_Job(updatedJob);
+                        _jobProcessingService.Update_Item(updatedJob);
 
                         return;
                     }
@@ -724,16 +773,16 @@ namespace HealthPassport.Pages
                             Job updatedJob = new Job
                             {
                                 JobId = selectedItem.JobId,
-                                SubunitId = _jobProcessingService.Get_SubunitIdByName(selectedItem.Subunit),
+                                SubunitId = _subunitProcessingService.Get_IdByMainParam(selectedItem.Subunit),
                                 WorkingRate = selectedItem.WorkingRate,
                                 StartWorkingDate = DateTime.ParseExact(selectedItem.StartWorkingDate, format, culture),
                                 EndWorkingDate = DateTime.ParseExact(selectedItem.EndWorkingDate, format, culture),
                                 EmployeeId = selectedEmployee.EmployeeId,
-                                JobTypeId = _jobProcessingService.Get_JobTypeIdByName(selectedItem.JobName)
+                                JobTypeId = _jobTypeProcessingService.Get_IdByMainParam(selectedItem.JobName)
                             };
 
 
-                            _jobProcessingService.Update_Job(updatedJob);
+                            _jobProcessingService.Update_Item(updatedJob);
                         }
                     }
                 }
@@ -788,11 +837,11 @@ namespace HealthPassport.Pages
             if (selectedEducation != null)
             {
                 selectedEmployee.Educations.Remove(selectedEducation);
-                _educationProcessingService.Delete_Education(selectedEducation.EducationId);
+                _educationProcessingService.Delete_Item(selectedEducation.EducationId);
 
                 if(selectedEmployee.Educations.Count > 0)
                 {
-                    selectedEmployee.Education = selectedEmployee.Educations[selectedEmployee.Educations.Count - 1].EducationType;
+                    selectedEmployee.Education = selectedEmployee.Educations[0].EducationType;
                 }
                 else
                 {
@@ -814,12 +863,12 @@ namespace HealthPassport.Pages
                 Education newEducation = new Education 
                 {
                     EmployeeId = selectedEmployee.EmployeeId,
-                    EducationLevelId = _educationProcessingService.Get_EducationLevelIdByName(EducationType_comboBox.Text),
+                    EducationLevelId = _educationLevelProcessingService.Get_IdByMainParam(EducationType_comboBox.Text),
                     EducationInstitution = EducationInstitutionName_textBox.Text,
                     Date = DateTime.Now
                 };
-                _educationProcessingService.Add_Education(newEducation);
-                selectedEmployee.Educations.Add((Education_ViewModel)newEducation);
+                _educationProcessingService.Add_Item(newEducation);
+                selectedEmployee.Educations.Insert(0, (Education_ViewModel)newEducation);
                 selectedEmployee.Education = EducationType_comboBox.Text;
 
                 educations_dataGrid.Items.Refresh();
@@ -841,7 +890,7 @@ namespace HealthPassport.Pages
                         if (e.Column.Header.ToString() == "Уровень образования")
                         {
                             selectedItem.EducationType = comboBox.SelectedItem.ToString();
-                            if(selectedEmployee.Educations.IndexOf(selectedItem) == selectedEmployee.Educations.Count - 1)
+                            if(selectedEmployee.Educations.IndexOf(selectedItem) == 0)
                             {
                                 selectedEmployee.Education = comboBox.SelectedItem.ToString();
                             }
@@ -863,12 +912,12 @@ namespace HealthPassport.Pages
                         Education education = new Education
                         {
                             EducationId = selectedItem.EducationId,
-                            EducationLevelId = _educationProcessingService.Get_EducationLevelIdByName(selectedItem.EducationType),
+                            EducationLevelId = _educationLevelProcessingService.Get_IdByMainParam(selectedItem.EducationType),
                             EducationInstitution = selectedItem.EducationInstitution,
                             Date = DateTime.ParseExact(selectedItem.Date, format, culture),
                         };
 
-                        _educationProcessingService.Update_Education(education);
+                        _educationProcessingService.Update_Item(education);
                     }
                 }
                 catch
@@ -908,7 +957,7 @@ namespace HealthPassport.Pages
 
                 selectedEmployee.Birthday = updatedEmployee.Birthday.ToString("dd.MM.yyyy");
 
-                _employeeProcessingService.Update_employee(updatedEmployee);
+                _employeeProcessingService.Update_Item(updatedEmployee);
             }
         }
 
@@ -922,13 +971,13 @@ namespace HealthPassport.Pages
                     FIO = FIO_textBox.Text,
                     Birthday = Birthday_datePicker.SelectedDate.Value,
                     Photo = selectedEmployee.Photo,
-                    MailAdress = Mail_textBox.Text,
+                    MailAdress = Mail_textBox.Text
                 };
 
                 selectedEmployee.FIO = updatedEmployee.FIO;
                 selectedEmployee.MailAdress = updatedEmployee.MailAdress;
 
-                _employeeProcessingService.Update_employee(updatedEmployee);
+                _employeeProcessingService.Update_Item(updatedEmployee);
             }
         }
 
@@ -948,7 +997,7 @@ namespace HealthPassport.Pages
                     Photo = photo
                 };
 
-                _employeeProcessingService.Update_employee(updatedEmployee);
+                _employeeProcessingService.Update_Item(updatedEmployee);
             }
         }
 
@@ -966,7 +1015,7 @@ namespace HealthPassport.Pages
                 Photo = photo
             };
 
-            _employeeProcessingService.Update_employee(updatedEmployee);
+            _employeeProcessingService.Update_Item(updatedEmployee);
         }
 
         private void downloadToFile_button_Click(object sender, RoutedEventArgs e)
@@ -996,7 +1045,7 @@ namespace HealthPassport.Pages
                     Photo = photo
                 };
 
-                _employeeProcessingService.Update_employee(updatedEmployee);
+                _employeeProcessingService.Update_Item(updatedEmployee);
             }
         }
 
@@ -1076,6 +1125,38 @@ namespace HealthPassport.Pages
             {
                 MessageBox.Show("Сотрудник не имеет семейных статусов.", "Экспорт недоступен", MessageBoxButton.OK, MessageBoxImage.Information);
             }
+        }
+
+        private void sendMessage_button_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(sendMessage_textBox.Text))
+            {
+                MessageBox.Show("Введите текст сообщения перед отправкой.", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else if (!_mailSenderService.IsValidEmail(Mail_textBox.Text))
+            {
+                MessageBox.Show("Указан невалидный адрес почты.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            else
+            {
+                var FIO = selectedEmployee.FIO.Split(' ');
+                JobType currentJobType = _employeeProcessingService.Get_EmployeeJobType(currentUser.EmployeeId);
+                _mailSenderService.SendFromAdminMailMessage(Mail_textBox.Text, $"Уведомление от {currentJobType.JobName}а", $"{FIO[1]}!<br>{sendMessage_textBox.Text}");
+            }
+        }
+
+        private void nextEmployee_button_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            ((MainWindow)this.Owner).isNowNextEmployee = true;
+            ((MainWindow)this.Owner).isNowPrevEmployee = false;
+            Close();
+        }
+
+        private void prevEmployee_button_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            ((MainWindow)this.Owner).isNowNextEmployee = false;
+            ((MainWindow)this.Owner).isNowPrevEmployee = true;
+            Close();
         }
     }
 }

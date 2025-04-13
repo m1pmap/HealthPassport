@@ -12,5 +12,6 @@ namespace HealthPassport.BLL.Interfaces
         public bool SendEmailCode(string mailTo, string subject, string text);
         public string GenerateAlphaNumericCode(int length);
         public bool IsValidEmail(string email);
+        bool SendFromAdminMailMessage(string mailTo, string subject, string text);
     }
 }

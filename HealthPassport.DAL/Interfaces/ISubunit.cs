@@ -7,10 +7,7 @@ using System.Threading.Tasks;
 
 namespace HealthPassport.DAL.Interfaces
 {
-    public interface ISubunit
+    public interface ISubunit : IGetRepository<Subunit>, ICudRepository<Subunit>
     {
-        public List<Subunit> GetAllSubunits();
-        public int Get_SubunitIdByName(string subunitName);
-        public string Get_SubunitNameById(int id);
     }
 }

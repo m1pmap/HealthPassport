@@ -7,10 +7,7 @@ using System.Threading.Tasks;
 
 namespace HealthPassport.DAL.Interfaces
 {
-    public interface IJobType
+    public interface IJobType : IGetRepository<JobType>, ICudRepository<JobType>
     {
-        public List<JobType> GetAllJobTypes();
-        public int Get_JobTypeIdByName(string jobName);
-        public string Get_JobNameById(int id);
     }
 }

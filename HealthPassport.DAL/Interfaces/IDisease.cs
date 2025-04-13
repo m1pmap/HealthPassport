@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace HealthPassport.DAL.Interfaces
 {
-    public interface IDisease
+    public interface IDisease : ICudRepository<Disease>
     {
-        bool Add_Disease(Disease disease);
-        bool Delete_Disease(int id);
-        bool Update_Disease(Disease disease);
+        public List<Disease> Get_AllItems();
     }
 }

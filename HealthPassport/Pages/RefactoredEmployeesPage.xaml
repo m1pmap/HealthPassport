@@ -1,0 +1,126 @@
+﻿<Window x:Class="HealthPassport.Pages.RefactoredEmployeesPage"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:HealthPassport.Pages"
+        mc:Ignorable="d"
+        Title="RefactoredEmployeesPage" Height="505" Width="645"
+        AllowsTransparency="True" Background="Transparent"
+        WindowStartupLocation="CenterScreen" WindowStyle="None"
+        Loaded="Window_Loaded">
+
+    <Window.Resources>
+        <ControlTemplate TargetType="Button" x:Key="dataGridBtTemplate">
+            <Border x:Name="border"
+                    CornerRadius="5"
+                    Background="{TemplateBinding Background}">  
+                <StackPanel Orientation="Horizontal" 
+                            HorizontalAlignment="Center" 
+                            VerticalAlignment="Center">
+                    <ContentPresenter HorizontalAlignment="Center" 
+                      VerticalAlignment="Center" 
+                      Content="{TemplateBinding Content}" 
+                      ContentTemplate="{TemplateBinding ContentTemplate}"/>
+                </StackPanel>
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="border" Property="Background" Value="CornflowerBlue"/>
+                    <Setter Property="Foreground" Value="White"/>
+                    <!-- Изменение цвета текста -->
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+    </Window.Resources>
+    
+    <Grid Margin="0,0,0,0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="50"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Background="White" CornerRadius="15" BorderThickness="1.7" BorderBrush="Gray">
+            <StackPanel Margin="10">
+                <Label Content="Сотрудники для прививания" FontFamily="Arial Black" Foreground="Gray" HorizontalAlignment="Center"/>
+
+                <StackPanel Orientation="Horizontal">
+                    <TextBox x:Name="search_textBox" Padding="2" FontFamily="Arial" FontSize="14" Foreground="Gray" Width="498" Height="23"
+                             TextChanged="search_textBox_TextChanged"/>
+
+                    <Button x:Name="search_button" Grid.Column="1"
+                            Template="{StaticResource btTemplate}" 
+                            Height="25" Width="68"
+                            Background="DarkSeaGreen"
+                            VerticalAlignment="Center"
+                            Margin="5,0,0,0" 
+                            Click="search_button_Click"
+                            Content="Поиск" Foreground="White"
+                            FontFamily="Arial Black"/>
+                </StackPanel>
+
+                <DataGrid x:Name="employees_dataGrid" Grid.Row="1" AutoGenerateColumns="False" Margin="5,10,5,10" Background="Transparent"
+                          MinRowHeight="20" FontSize="14"
+                          CanUserAddRows="False" FontFamily="Arial" Foreground="Gray" HeadersVisibility="Column"
+                          RowHeaderWidth="0" SelectedIndex="0" IsReadOnly="True" Height="333" CanUserSortColumns="False" Width="558"
+                          HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="ФИО" Binding="{Binding FIO}" Width="*" IsReadOnly="False">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="TextWrapping" Value="Wrap"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTemplateColumn Header="" Width="25" MinWidth="32" MaxWidth="32" IsReadOnly="True">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+
+
+                                        <Button x:Name="deleteEmployee_button"
+                                                Background="#e94e64" 
+                                                Template="{StaticResource dataGridBtTemplate}" 
+                                                Width="21" Height="20"
+                                                Click="deleteEmployee_button_Click">
+                                            <Image Source="/resources/images/delete_image.png" Height="15" Width="15" Margin="-0.5,0,0,0"/>
+                                        </Button>
+
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <Label Content="Наименование прививки" FontFamily="Arial" FontSize="12" Margin="4,0,0,-5" Foreground="Gray" HorizontalAlignment="Left"/>
+
+                <TextBox x:Name="vaccinationName_textBox" Padding="2" 
+                         FontFamily="Arial" FontSize="14" Foreground="Gray" Height="23"
+                         Margin="0,0,0,10" Width="556"/>
+                
+                <Button x:Name="addVaccinations_button" Grid.Column="1"
+                        Template="{StaticResource btTemplate}" 
+                        Height="25" Width="557"
+                        Background="DarkSeaGreen"
+                        Content="Добавить прививки сотрудникам" 
+                        Foreground="White"
+                        FontFamily="Arial Black"
+                        Click="addVaccinations_button_Click"/>
+            </StackPanel>
+        </Border>
+
+        <Button x:Name="closeWindow_button" Grid.Column="1"
+                Template="{StaticResource btTemplate}" 
+                Height="40" Width="40"
+                Background="#e94e64"
+                VerticalAlignment="Top"
+                HorizontalAlignment="Left"
+                Margin="5,5,0,0" 
+                ToolTip="Закрыть окно"
+                Click="closeWindow_button_Click">
+            <Image Source="/resources/images/delete_image.png" Height="25" Width="25" Margin="0,0,0,0"/>
+        </Button>
+    </Grid>
+</Window>

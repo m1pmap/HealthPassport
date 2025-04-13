@@ -17,19 +17,25 @@ namespace HealthPassport.BLL.Services
         {
             _diseaseRepository = diseaseRepository;
         }
-        public bool Add_Disease(Disease newDisease)
+
+        public bool Add_Item(Disease entity)
         {
-            return _diseaseRepository.Add_Disease(newDisease);
+            return _diseaseRepository.Add_Item(entity);
         }
 
-        public bool Delete_Disease(int id)
+        public bool Delete_Item(int id)
         {
-            return _diseaseRepository.Delete_Disease(id);
+            return _diseaseRepository.Delete_Item(id);
         }
 
-        public bool Update_Disease(Disease newDisease)
+        public List<Disease> Get_AllItems()
         {
-            return _diseaseRepository.Update_Disease(newDisease);
+            return _diseaseRepository.Get_AllItems();
+        }
+
+        public bool Update_Item(Disease entity)
+        {
+            return _diseaseRepository.Update_Item(entity);
         }
     }
 }

@@ -40,9 +40,9 @@ namespace Dahmira.Pages
         private readonly IMailSender _mailSender;
         private readonly IServiceProvider _serviceProvider;
         private readonly IEmployeeProcessing _employeeProcessingService;
-        private readonly IJobProcessing _jobProcessingService;
+        private readonly ICudProcessing<Job> _jobProcessingService;
 
-        public WriteMailCodePage(IMailSender mailSender, IServiceProvider serviceProvider, IEmployeeProcessing employeeProcessingService, IJobProcessing jobProcessingService)
+        public WriteMailCodePage(IMailSender mailSender, IServiceProvider serviceProvider, IEmployeeProcessing employeeProcessingService, ICudProcessing<Job> jobProcessingService)
         {
             InitializeComponent();
 
@@ -78,10 +78,10 @@ namespace Dahmira.Pages
                     {
                         if (isRegistration)
                         {
-                            _employeeProcessingService.Add_Employee(employee);
+                            _employeeProcessingService.Add_Item(employee);
 
                             employeeJob.EmployeeId = employee.EmployeeId;
-                            _jobProcessingService.Add_Job(employeeJob);
+                            _jobProcessingService.Add_Item(employeeJob);
                         }
                         
                         var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();

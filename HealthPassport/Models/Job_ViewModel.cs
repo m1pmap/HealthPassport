@@ -105,13 +105,14 @@ namespace HealthPassport.Models
 
         public static explicit operator Job_ViewModel(Job job)
         {
-            var jobProcessingService = ServiceLocator.Provider.GetService<IJobProcessing>();
+            var jobProcessingService = ServiceLocator.Provider.GetService<IJobTypeProcessing>();
+            var subunitProcessingService = ServiceLocator.Provider.GetService<ISubunitProcessing>();
 
             Job_ViewModel newJobVM = new Job_ViewModel
             {
                 JobId = job.JobId,
-                JobName = jobProcessingService.Get_JobNameById(job.JobTypeId),
-                Subunit = jobProcessingService.Get_SubunitNameById(job.SubunitId),
+                JobName = jobProcessingService.Get_MainParamById(job.JobTypeId),
+                Subunit = subunitProcessingService.Get_MainParamById(job.SubunitId),
                 WorkingRate = job.WorkingRate,
                 StartWorkingDate = job.StartWorkingDate.ToString("dd.MM.yyyy"),
             };

@@ -9,26 +9,27 @@ using System.Threading.Tasks;
 
 namespace HealthPassport.BLL.Services
 {
-    public class AntropologicalResearchProcessing_Service : IAntropologicalResearchProcessing
+    public class AntropologicalResearchProcessing_Service : ICudProcessing<AntropologicalResearch>
     {
-        private readonly IAntropologicalResearch _antropologicalResearchService;
-        public AntropologicalResearchProcessing_Service(IAntropologicalResearch antropologicalResearchService)
+        private readonly ICudRepository<AntropologicalResearch> _antropologicalResearchService;
+        public AntropologicalResearchProcessing_Service(ICudRepository<AntropologicalResearch> antropologicalResearchService)
         {
             _antropologicalResearchService = antropologicalResearchService;
         }
-        public bool Add_AntropologicalResearch(AntropologicalResearch antropologicalResearch)
+
+        public bool Add_Item(AntropologicalResearch entity)
         {
-            return _antropologicalResearchService.Add_AntropologicalResearch(antropologicalResearch);
+            return _antropologicalResearchService.Add_Item(entity);
         }
 
-        public bool Delete_AntropologicalResearch(int id)
+        public bool Delete_Item(int id)
         {
-            return _antropologicalResearchService.Delete_AntropologicalResearch(id);
+            return _antropologicalResearchService.Delete_Item(id);
         }
 
-        public bool Update_AntropologicalResearch(AntropologicalResearch antropologicalResearch)
+        public bool Update_Item(AntropologicalResearch entity)
         {
-            return _antropologicalResearchService.Update_AntropologicalResearch(antropologicalResearch);
+            return _antropologicalResearchService.Update_Item(entity);
         }
     }
 }

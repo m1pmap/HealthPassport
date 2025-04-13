@@ -9,26 +9,28 @@ using System.Threading.Tasks;
 
 namespace HealthPassport.BLL.Services
 {
-    public class FamilyStatusProcessing_Service : IFamilyStatusProcessing
+    public class FamilyStatusProcessing_Service : ICudProcessing<FamilyStatus>
     {
-        private readonly IFamilyStatus _familyStatusRepository;
-        public FamilyStatusProcessing_Service(IFamilyStatus familyStatusRepository) 
+        private readonly ICudRepository<FamilyStatus> _familyStatusRepository;
+        public FamilyStatusProcessing_Service(ICudRepository<FamilyStatus> familyStatusRepository) 
         {
             _familyStatusRepository = familyStatusRepository;
         }
-        public bool Add_FamilyStatus(FamilyStatus familyStatus)
+
+        public bool Add_Item(FamilyStatus entity)
         {
-            return _familyStatusRepository.Add_FamilyStatus(familyStatus);
+            return _familyStatusRepository.Add_Item(entity);
         }
 
-        public bool Delete_FamilyStatus(int id)
+        public bool Delete_Item(int id)
         {
-            return _familyStatusRepository.Delete_FamilyStatus(id);
+            return _familyStatusRepository.Delete_Item(id);
+
         }
 
-        public bool Update_FamilyStatus(FamilyStatus familyStatus)
+        public bool Update_Item(FamilyStatus entity)
         {
-            return _familyStatusRepository.Update_FamilyStatus(familyStatus);
+            return _familyStatusRepository.Update_Item(entity);
         }
     }
 }

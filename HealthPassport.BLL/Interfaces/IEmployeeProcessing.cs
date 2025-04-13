@@ -9,13 +9,12 @@ using System.Threading.Tasks;
 
 namespace HealthPassport.BLL.Interfaces
 {
-    public interface IEmployeeProcessing
+    public interface IEmployeeProcessing : ICudProcessing<Employee>
     {
-        bool Add_Employee(Employee employee);
         List<Employee> Get_AllEmployees();
-        bool Delete_Employee(int id);
-        bool Update_employee(Employee employee);
         Employee CheckEmployeeInDb(string mail);
         Employee Connect_EmployeeInformation(Employee employee);
+        JobType Get_EmployeeJobType(int id);
+        void SetCurrentEmployeeId(int id);
     }
 }
